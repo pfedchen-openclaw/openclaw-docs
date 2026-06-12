@@ -1,0 +1,5 @@
+# Backstop — secrets must never enter the docs repo.
+secrets.json
+auth-profiles.json
+.op-service-token
+agent-creds/
