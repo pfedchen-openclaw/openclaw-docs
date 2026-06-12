@@ -18,7 +18,7 @@ Per the 6c.4 closure: gateway healthz 200 / pid **91510** (or current); **A-7 li
 - **Bootstrap truncation (P6-36)** — TOOLS.md is already ~52% truncated at injection; adding a docs section worsens it. Put the *invocation* in the (less-truncated) AGENTS.md line, keep the TOOLS.md section tight, and consider whether to raise `bootstrapTotalMaxChars` here or defer to 6c.7 hygiene.
 - **Signature-PNG insertion — DO NOT BUILD** (deferred, P6-33). docx/xlsx + PDF + attachment only.
 - **Docs/Sheets *writes* via API are blocked** (P6-32) — produce documents via LibreOffice/python-docx locally, not the Google Docs API.
-- **P6-35 (egress) + P6-36 (cap) decisions** may still be pending from 6c.4 — if Peter answered, action them; else carry.
+- **P6-35 (egress hardening) — DECIDED: defer to 6c.7** (Peter, 6c.4). Do **not** action host-level egress hardening in 6c.5; it is a 6c.7 item. The browser egress-guard already in place stands. **P6-36 (bootstrap cap)** — default is to fold into 6c.7 hygiene; keep the TOOLS.md docs additions tight here so truncation doesn't worsen.
 
 ## Exit criteria
 Both agents (by role, per matrix §3b) take a `.docx` → edit → PDF → **email draft with the PDF attached, surfaced for approval (never sent)**, through real agent turns; scratch stays out of `/workspace`; A-7 clean on any new sha; browser + Google + Gmail regressions green; TOOLS.md/AGENTS.md updated (both agents). **Signature insertion explicitly out of scope.**
