@@ -3,6 +3,23 @@ _Opener · generated at 6c.8 close (2026-06-13). 6c.8 delivered the reliability 
 
 **Delivers:** one prioritised pre-Andreas backlog from both logs · Marie/Charlotte comms-hygiene fixes applied + F26-verified (no-substance-no-message, no DM signature, show-working-without-technical-detail, + any other absorbed-but-unapplied feedback) · Colima socket durability hardened · Marie's session compaction · spend-visibility design. **Exit =** consolidated backlog doc · comms fixes live + verified on a real beat · Colima socket-health-check live · Marie's 92 MB session compacted · spend-visibility lever decided.
 
+## ⚑ Peter — do this BEFORE the 6c.9 build (dev/test ring-fence, [P6-51])
+_Purpose: a **second Anthropic workspace** for build/test spend so a Claude-Code test binge can't starve the agents' production budget (the [P6-47] lock-out cause). Production stays ONE shared key for all agents; dev/test gets its own key + its own cap. ~10 minutes, all in the Anthropic Console + 1Password._
+
+**In the Anthropic Console (console.anthropic.com → Settings):**
+1. **Create the workspace** — **Workspaces → Create Workspace** → name it exactly **`OpenClaw-DevTest`**.
+2. **Set its monthly spend limit** — open `OpenClaw-DevTest` → **Limits / Usage limits** → set a **monthly cap** (suggest **$300–500**; keep production + dev/test ≤ ~$1000/mo total). 
+3. **Confirm production cap** — check the **Default** (production) workspace is still at **$500** (where 6c.8's restore came from). Adjust if you want a different split.
+4. **Create a workspace-scoped API key** — inside `OpenClaw-DevTest` → **API Keys → Create Key** → name it **`openclaw-devtest`**. (A key created *inside* the workspace bills against that workspace's cap, not production.) **Copy it once** — it's shown only once.
+
+**Store the key in 1Password — do NOT paste it to me (F21/F51):**
+5. In the **OpenClaw** vault, create a new item:
+   - **Title (exactly, so I can fetch it via `op`):** `Anthropic API — OpenClaw dev/test (workspace OpenClaw-DevTest)`
+   - Put the key in the item's **password / credential** field.
+   - (Optional) note the workspace name + cap in the item for future reference.
+
+**Then tell me:** *"dev/test key is in 1Password"* and confirm the item title matches. I will: verify via `op` (sha-prefix + byte length only — never print the value), add a **dev anthropic auth profile**, and route Claude-Code verification turns (`openclaw capability/agent`) to it while **pa/pro stay on the production key untouched**. _(Mechanism — which profile/agent the test path resolves to — is a 6c.9 build step; F17/F21.)_ If you skip this, 6c.9 still runs; test turns just keep using production (cheaply, per [P6-51]).
+
 ## Stage 0 — Ledger + sanity (no mutating work until ALL-GREEN)
 - Deviations log currency: confirm **P6-43 CLOSED**, **P6-46/47 resolved**, **P6-53…57 present** (log `<re-anchor at open>` — was `7e45ca1bb30d`/128074B at 6c.8 close). No staged rows pending lift.
 - Sanity: `openclaw health` ok; `18789/healthz`→200; pa/pro interactive `claude-opus-4-7`, **heartbeat model sonnet-4-6** (`status --json .heartbeat.agents[]` → pa 30m, pro 4h, both enabled); both containers `capable-2026-06`; **A-7** live==last-good (`6554d79e955d`/9782B); op SERVICE_ACCOUNT; pin **2026.4.22** (2026.6.6 available — do NOT bump; run `browser-dep-repair.sh` after any bump).
