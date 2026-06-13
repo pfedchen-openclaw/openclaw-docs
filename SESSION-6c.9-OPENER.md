@@ -5,8 +5,8 @@ _Opener · generated at 6c.8 close (2026-06-13). 6c.8 delivered the reliability 
 
 ## Stage 0 — Ledger + sanity (no mutating work until ALL-GREEN)
 - Deviations log currency: confirm **P6-43 CLOSED**, **P6-46/47 resolved**, **P6-53…57 present** (log `<re-anchor at open>` — was `7e45ca1bb30d`/128074B at 6c.8 close). No staged rows pending lift.
-- Sanity: `openclaw health` ok; `18789/healthz`→200; pa/pro interactive `claude-opus-4-7`, **heartbeat model sonnet-4-6** (`status --json .heartbeat.agents[]` → pa 30m, pro 4h, both enabled); both containers `capable-2026-06`; **A-7** live==last-good (`13f7c930c3b9`/9734B); op SERVICE_ACCOUNT; pin **2026.4.22** (2026.6.6 available — do NOT bump; run `browser-dep-repair.sh` after any bump).
-- **Reliability check (the 6c.8 deliverables held?):** `tail logs/heartbeat-watchdog.log` → recent `ok last-beat Nm ago` (no unexpected restarts/alerts); watchdog LaunchAgent loaded (`launchctl print gui/502/ai.openclaw.heartbeat-watchdog`); **confirm natural (non-restart) beats fired through the empirical week** (grep `[heartbeat] started` cadence ~30m for pa); fallback still `[anthropic/claude-sonnet-4-6]`. Browser posture: trenitalia ok / 192.168.1.1 blocked.
+- Sanity: `openclaw health` ok; `18789/healthz`→200; pa/pro interactive `claude-opus-4-7`, **heartbeat model sonnet-4-6** (`status --json .heartbeat.agents[]` → pa 30m, pro 4h, both enabled); both containers `capable-2026-06`; **A-7** live==last-good (`6554d79e955d`/9782B); op SERVICE_ACCOUNT; pin **2026.4.22** (2026.6.6 available — do NOT bump; run `browser-dep-repair.sh` after any bump).
+- **Reliability check (the 6c.8 deliverables held?):** `tail logs/heartbeat-watchdog.log` → recent `ok last-beat Nm ago` (no unexpected restarts/alerts); watchdog LaunchAgent loaded (`launchctl print gui/502/ai.openclaw.heartbeat-watchdog`); **confirm natural (non-restart) beats fired through the empirical week** (grep `[heartbeat] started` cadence ~30m for pa); fallback still `["openai/gpt-5"]` ([P6-58]) + gpt-5 loud-flag clean (no spurious `FALLBACK-TO-OPENAI` alerts in `heartbeat-watchdog.log`). Browser posture: trenitalia ok / 192.168.1.1 blocked.
 
 ## Stage 1 — Pre-CoS deviations audit ([P6-48] #1, [P6-50])
 - **Cross-read BOTH logs:** the frozen `DEVIATIONS-LOG.md` (~498KB, D/F/S/M/SR — Phase-0→~6a/6b) **and** `PHASE-6-DEVIATIONS-LOG.md` (P6, 6c). Extract every **still-open** item + standing constraint into one prioritised **"must-cover-before-Andreas"** backlog (new doc, e.g. `PRE-COS-BACKLOG.md`). Clear what's cheap; tag the rest must-fix / nice-to-have / defer-past-6d.
@@ -21,7 +21,7 @@ _Opener · generated at 6c.8 close (2026-06-13). 6c.8 delivered the reliability 
 - **Session compaction.** Marie's `agents/pa/sessions/` is **92 MB** (50 MB trajectory on `14b920c0`). Compact/rotate (cost + [P6-46] wedge). Check `agents.defaults.compaction` + any `openclaw` session-compact command (A-12).
 - **Spend visibility.** `openclaw gateway usage-cost` reads $0 (no embedded spend). Design a real daily readout (Console API or per-session token sum) or accept Console-only.
 - **Dev/test key ([P6-51]).** If Peter has provisioned the dev/test workspace+key (1Password), wire the dev auth profile and route `openclaw agent`/Claude-Code verification turns to it. Else carry.
-- **Optional:** cross-provider GPT-5-tier tertiary fallback if Peter wants belt-and-braces (needs catalog add + access check, A-12).
+- _(Cross-provider fallback DONE in 6c.8 — `openai/gpt-5` universal backup, [P6-58]. Watch the empirical week for any real failover episodes + their loud-flag alerts.)_
 
 ## Stage 4 — Close (three deliverables)
 - DEVIATIONS-LOG.md additive (new codes for findings; append resolutions). **SESSION-6c.9-CLOSURE.md.** **SESSION-6c.10-OPENER.md** = canonical reconciliation + ARCHITECTURE v7 (Andreas-ready spec, incl. [P6-49] CTO/architect remit) — the designed milestone, **after** the empirical week.
