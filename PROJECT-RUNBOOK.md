@@ -121,6 +121,7 @@ Hard rules — violations are immediate stop-and-rollback events:
 | Need an encrypted 1Password snapshot | run op-backup interactively | §2.10 |
 | Config repo stale after an `openclaw.json` change | re-run the sanitiser + commit + push | §2.11 |
 | Re-enabling a descoped job (calendar-backup / security-audit) | rename `.disabled-D24` → `.plist`, then bootstrap (GUI) | §2.12 |
+| Browser tool fails "Playwright is not available …" (esp. after `openclaw update`) | `ls -l …/openclaw/node_modules/playwright-core` (P6-40 symlink) | §2.13 |
 | Something feels off but no clear symptom | Run the catch-all health check | §2.7 |
 
 ### 2.1 Gateway restoration (F45 ceremony)
@@ -359,6 +360,16 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/ai.openclaw.<job>.plist
 ```
 
 4. **Verify what it DOES, not just that it loaded** (A-1): `launchctl print … | head -3` (F69, never head-1) for loaded state, then the job's log-tail + output-existence after its first fire. A job that is "loaded" but failing silently is the exact F68/F63 trap.
+
+### 2.13 Host browser-dep repair (P6-40)
+
+**Symptom:** the host `browser` tool fails with *"Playwright is not available in this gateway build; … install playwright-core, then restart the gateway."* — most often immediately after an `openclaw update` / reinstall, which wipes the symlink.
+
+**Root cause (P6-40):** `playwright-core@1.59.1` ships bundled only at `…/openclaw/dist/extensions/browser/node_modules/playwright-core`, but the gateway importer sits at `dist/` level and Node's module walk-up never reaches it. The 6c.6 fix is a symlink from pkg-root `node_modules` to that bundled copy; the gateway **memoises the failed import**, so a restart is mandatory after re-linking.
+
+**One-touch repair:** run `~/.openclaw/scripts/browser-dep-repair.sh` (SSH-safe — gateway restart only, no GUI/D20 needed). It re-creates the symlink idempotently, restarts the gateway only if the link changed, and verifies with a real `navigate`. Exit 0 = healthy. **Run it after every `openclaw update`.** A second run is a clean no-op (no restart) when already healthy.
+
+**Verify by hand:** `openclaw browser navigate https://example.com` → "navigated to https://example.com/".
 
 ## 3. Quick-reference card
 
