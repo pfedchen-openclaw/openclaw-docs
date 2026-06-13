@@ -1,5 +1,5 @@
 # SESSION 6c.7 — Ops & reliability pass (browser durability + SSRF posture) — CLOSURE
-_2026-06-13. Hardened the host-browser for unattended operation and, at Peter's direction, **renounced the domain allowlist** in favour of IP-class SSRF filtering — fixing the usability cliff (Trenitalia) and dissolving P6-41. New codes: **P6-42** (allowlist renunciation), **P6-43** (cold-path GUI-login gap), **P6-44** (complex-UI playbook), **P6-45** (payment-layer guardrail, forward), **P6-46** (long-turn → session-lock wedge). **P6-40 & P6-41 RESOLVED.**_
+_2026-06-13. Hardened the host-browser for unattended operation and, at Peter's direction, **renounced the domain allowlist** in favour of IP-class SSRF filtering — fixing the usability cliff (Trenitalia) and dissolving P6-41. New codes: **P6-42** (allowlist renunciation), **P6-43** (cold-path GUI-login gap), **P6-44** (complex-UI playbook), **P6-45** (payment-layer guardrail, forward), **P6-46** (long-turn → session-lock wedge). **P6-40 & P6-41 RESOLVED.** The session then expanded (Peter-led) into a **reliability + pre-CoS-planning + cost-accountability** arc — **P6-47** (agent unreliability diagnosis), **P6-48** (pre-CoS housekeeping roadmap + v7), **P6-49** (Andreas CTO/architect remit), **P6-50** (agent comms-hygiene review), **P6-51** (cost trace + hard no-unauthorised-test-spend rule) — captured in §8._
 
 ## §1 Outcome
 The host browser is now both **durable** and **usable**:
@@ -23,7 +23,9 @@ The host browser is now both **durable** and **usable**:
 - **Guard patch:** `dist/cdp.helpers-BWvLGafd.js` `63e4284773ad`/22170B (was `3d8cb5acf29b`/22171B); original at `…orig-6c7` (`: false`). **Update-fragile — re-applied by the repair script.**
 - **Repair script:** `scripts/browser-dep-repair.sh` `30899bb59d4e`/5294B (exec).
 - **Docs:** runbook `a50083f5bb73`/43534B (§2.13 + symptom map); pa TOOLS `493561049893` / AGENTS `6c304e685947`; pro TOOLS `e3893b8b6143` / AGENTS `b3cbf3e5f1e3`.
-- **Deviations log:** **`036e7cf98cf7`** (105078B).
+- **Deviations log:** **`1b45eebdf6aa`** (115031B) _(grew through the §8 post-close arc)_.
+- **CLAUDE.md:** cost-discipline hard rule added to the autonomy posture ([P6-51]).
+- **Claude Code memory added:** `security-design-philosophy`, `agent-comms-preferences`, `no-unauthorized-test-spend`.
 - **Unchanged:** image `capable-2026-06`; pa/pro `claude-opus-4-7`; OpenClaw **2026.4.22 pinned** (2026.6.6 available, NOT bumped); gateway gui/502; Chrome 149 host.
 
 ## §4 F26 proof (real agent turns, `claude-opus-4-7`)
@@ -48,8 +50,17 @@ The host browser is now both **durable** and **usable**:
 - **Standing:** SR-2 (ICS before calendar write); correspondence review before 6d; managed-remote browser deferred; workspace cruft (P6-36); signature-PNG (P6-33); Docs/Sheets API writes (P6-32); P6-35 host-egress; scheduling (P6-29)/chat-hygiene (P6-27/30)/cost/backup; PENDING-BATCH-APPLY (P6-11/12/14) + Charlotte avatar (P6-20).
 - **Pin:** 2026.6.6 update available — surface before any bump; after a bump, run `browser-dep-repair.sh`.
 
+## §8 Post-close arc — reliability, pre-CoS planning, cost accountability (Peter-led)
+After the core close, Peter pushed on the real day-to-day gap (agents unreliable) and the road to 6d. What this produced:
+- **[P6-47] Agent unreliability diagnosed (evidenced from gateway logs).** 8am reports/heartbeats fail because: 🔴 **LLM usage cap hit** ("regain 2026-07-01") → primary model rejected; 🔴 `gpt-4o` fallback rate-limited; 🟠 heartbeat loop stalled **6h** today (KeepAlive ≠ healthy loop, no watchdog); 🟠 **Charlotte's heartbeat disabled**; 🟠 Colima socket drops ×12; 🟡 memory-file ENOENT; 🟡 zero observability. → **6c.8 reprioritised to a dedicated reliability sprint** (opener rewritten).
+- **[P6-51] Cost trace + HARD RULE.** Local reconstruction: **~$537 month-to-date, ~all Marie**, dominated by **Opus-heavy agent _testing_** (incl. this session's F26 turns + an 8.5-min Booking loop — **largely my own testing, a mistake I own**) amplified by Marie's **52 MB session bloat** (also the [P6-46] wedge culprit). Blew the $300 cap (Peter raised → **$500**). **New binding rule (CLAUDE.md + memory): never spend materially on billed test-turns without explicit authorisation** — default to inspection/cheap-Sonnet/single-short-turn; authorise before anything >~$5 or Opus/loop/browser-heavy/batched.
+- **[P6-48] Pre-CoS housekeeping roadmap:** **6c.8 reliability → ~1wk empirical Marie+Charlotte use → 6c.9 deviations audit (both logs) + comms-hygiene review → 6c.10 canonical reconciliation + ARCHITECTURE v7 → 6d Andreas.** Clarified (Peter): 6c.9 can run **during** the empirical week; only 6c.10 must follow it.
+- **[P6-49] Andreas = CoS + CTO/architect engineering-steward** (code review, de-staling, refactor/update tracking, doc ownership) on a **propose-not-execute** boundary; formalise in v7.
+- **[P6-50] Pre-CoS agent comms-hygiene review** — sweep Marie/Charlotte memory + persona files; seed fixes: no-substance-no-message, no signature in Telegram DMs, show-working-without-technical-detail. Quick wins foldable into 6c.8 once the cap is resolved (F26-verifiable).
+- **Peter decisions taken:** renounce allowlist ([P6-42]); raise cap $300→$500; build the cost guardrail properly in 6c.8; 6c.9 in coming days, 6c.10 after the week. **Still pending Peter:** the LLM-cap *direction* (raise-vs-metered + tiering headroom) and [P6-43] auto-login.
+
 ## §7 Ledger — rows to apply at 6c.8 Stage 0
-_Already applied to `PHASE-6-DEVIATIONS-LOG.md` this session: **P6-40 RESOLVED** (durable repair script, append), **P6-41 RESOLVED-by-dissolution** (append), **P6-42 / P6-43 / P6-44 / P6-45 / P6-46** (new). No staged rows pending lift; the carries above feed the 6c.8 opener directly._
+_Already applied to `PHASE-6-DEVIATIONS-LOG.md` this session: **P6-40 RESOLVED** + **P6-41 RESOLVED-by-dissolution** (appends); **P6-42 … P6-51** (new). No staged rows pending lift; the §6/§8 carries feed the 6c.8 opener directly._
 
 ---
-_Attachments for 6c.8: this closure + PHASE-6-DEVIATIONS-LOG.md (`036e7cf98cf7`) + CAPABILITIES-ROADMAP-TO-6D + the 6c.8 opener._
+_Attachments for 6c.8: this closure + PHASE-6-DEVIATIONS-LOG.md (`1b45eebdf6aa`) + CAPABILITIES-ROADMAP-TO-6D + the 6c.8 opener._
