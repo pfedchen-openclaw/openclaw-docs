@@ -3,22 +3,14 @@ _Opener · generated at 6c.8 close (2026-06-13). 6c.8 delivered the reliability 
 
 **Delivers:** one prioritised pre-Andreas backlog from both logs · Marie/Charlotte comms-hygiene fixes applied + F26-verified (no-substance-no-message, no DM signature, show-working-without-technical-detail, + any other absorbed-but-unapplied feedback) · Colima socket durability hardened · Marie's session compaction · spend-visibility design. **Exit =** consolidated backlog doc · comms fixes live + verified on a real beat · Colima socket-health-check live · Marie's 92 MB session compacted · spend-visibility lever decided.
 
-## ⚑ Peter — do this BEFORE the 6c.9 build (dev/test ring-fence, [P6-51])
-_Purpose: a **second Anthropic workspace** for build/test spend so a Claude-Code test binge can't starve the agents' production budget (the [P6-47] lock-out cause). Production stays ONE shared key for all agents; dev/test gets its own key + its own cap. ~10 minutes, all in the Anthropic Console + 1Password._
+## ⚑ Prerequisite — DONE (key architecture landed 2026-06-14, [P6-60])
+_Superseded the original single-`OpenClaw-DevTest` plan. The dev/test ring-fence ([P6-51]) and the master-arch "3 keys" firewall are **orthogonal axes that compose** → **4 zones**: 3 production-domain + 1 dev/test. All four Anthropic workspaces created (Peter) and keys VERIFIED in the **OpenClaw 1Password vault** (title = workspace name, field `credential`, sha-12 / len 108 / `sk-ant-`):_
+- `openclaw-zone1-personal` `fb0ec87d4394` → **Marie (pa)** _(byte-identical to the old single shared key — pa already correctly keyed)_
+- `openclaw-zone2-professional` `76159715bffa` → **Charlotte (pro)**
+- `openclaw-zone3-cross-domain` `7a0ffad56fe2` → **Andreas (cos)** — minted, **DORMANT** until 6d
+- `openclaw-zone4-devtest` `0472340059da` → Claude-Code capability/test turns
 
-**In the Anthropic Console (console.anthropic.com → Settings):**
-1. **Create the workspace** — **Workspaces → Create Workspace** → name it exactly **`OpenClaw-DevTest`**.
-2. **Set its monthly spend limit** — open `OpenClaw-DevTest` → **Limits / Usage limits** → set a **monthly cap** (suggest **$300–500**; keep production + dev/test ≤ ~$1000/mo total). 
-3. **Confirm production cap** — check the **Default** (production) workspace is still at **$500** (where 6c.8's restore came from). Adjust if you want a different split.
-4. **Create a workspace-scoped API key** — inside `OpenClaw-DevTest` → **API Keys → Create Key** → name it **`openclaw-devtest`**. (A key created *inside* the workspace bills against that workspace's cap, not production.) **Copy it once** — it's shown only once.
-
-**Store the key in 1Password — do NOT paste it to me (F21/F51):**
-5. In the **OpenClaw** vault, create a new item:
-   - **Title (exactly, so I can fetch it via `op`):** `Anthropic API — OpenClaw dev/test (workspace OpenClaw-DevTest)`
-   - Put the key in the item's **password / credential** field.
-   - (Optional) note the workspace name + cap in the item for future reference.
-
-**Then tell me:** *"dev/test key is in 1Password"* and confirm the item title matches. I will: verify via `op` (sha-prefix + byte length only — never print the value), add a **dev anthropic auth profile**, and route Claude-Code verification turns (`openclaw capability/agent`) to it while **pa/pro stay on the production key untouched**. _(Mechanism — which profile/agent the test path resolves to — is a 6c.9 build step; F17/F21.)_ If you skip this, 6c.9 still runs; test turns just keep using production (cheaply, per [P6-51]).
+**→ 6c.9 build step 1 (F17/F21):** repoint `pro`→zone2 (pa→zone1 is a no-op), route capability/test turns to zone4 (mechanism A-12 — likely `main`/default-agent profile or a dedicated test agent), sha-verify each rewired key against its 1Password value (never printed), atomic 0600/staff, re-anchor A-7. `openai:default` stays one shared key. Caps (Peter, ceilings): zone1 ~$400 / zone2 ~$250 / zone3 ~$50 / zone4 ~$200. Full rationale + honest ring-fence limit in [P6-60].
 
 ## Stage 0 — Ledger + sanity (no mutating work until ALL-GREEN)
 - Deviations log currency: confirm **P6-43 CLOSED**, **P6-46/47 resolved**, **P6-53…57 present** (log `<re-anchor at open>` — was `7e45ca1bb30d`/128074B at 6c.8 close). No staged rows pending lift.
