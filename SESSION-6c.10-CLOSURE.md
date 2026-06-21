@@ -31,8 +31,11 @@ Eleven workstreams (WS-0 unblock · WS-1 reliability/task-persistence · WS-2 ju
 - **6c.11 — Trust foundation** (WS-0,1,2,8,9): make the pair *trustworthy* before new capability.
 - **6c.12 — Capabilities I** (WS-3 Drive/Sheets write, WS-4 email, WS-5 browser) — all riding the owned-GCP/Workspace keystone.
 - **6c.13 — Capabilities II, high-trust** (WS-6 payments, WS-7 accounts) — approve-first.
-- **6c.14 — Acceptance gate** (real delivered tasks: tracker write, email-a-hotel, book-to-pre-pay, order-to-checkout, create-account+1Password, Charlotte triage+alert) → **then 6d Andreas** (Travel may precede Andreas).
-- **Hard gate:** do not author ARCHITECTURE v7 / build Andreas until the pair passes the acceptance gate — a CoS orchestrating unreliable agents amplifies the unreliability.
+- **6c.14 — Acceptance gate** (real delivered tasks: tracker write, email-a-hotel, book-to-pre-pay, order-to-checkout, create-account+1Password, Charlotte triage+alert).
+- **6c.15 — Travel agent** build (before Andreas, per Peter).
+- **6c.16 — CAPSTONE: ARCHITECTURE v7 + canonical reconciliation = the Andreas-ready spec** ([P6-76]) — the displaced 6c.10 capstone, re-instated. Authored on the *proven* roster (Marie + Charlotte + Travel), folding in the 6c.10 outputs: the judgement doctrine, the remediation programme, the capability decisions, the [P6-49]/[P6-74] engineering-steward + infra-currency remit, **S11** loop-protection, **S6** schema reconcile, **SR-1/D23** doc-sync, the voice/conventions lock. (Numbers 6c.15/16 indicative.)
+- **then 6d Andreas.**
+- **Hard gate:** ARCHITECTURE v7 is authored at the **6c.16 capstone**, not before — only once Marie, Charlotte (and Travel) are proven through the acceptance gate. A CoS orchestrating unreliable agents amplifies the unreliability; and the spec is far stronger authored on a working roster than on the broken one 6c.10 would have used.
 
 ## §7 End-state (anchors)
 - **`openclaw.json`: `d14bb41a3cc4` / 9963 B — UNCHANGED** (no config mutation this session; A-7 clean per `config-health.json`).
