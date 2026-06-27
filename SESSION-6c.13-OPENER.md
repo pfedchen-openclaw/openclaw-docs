@@ -2,7 +2,7 @@
 _Opener · generated at 6c.12 close (2026-06-27). 6c.12 shipped **Drive/Docs/Sheets write** (F26 PASS, [P6-83]) and diagnosed the **browser over-block away** ([P6-84] — already in the no-allowlist posture Peter wants); WS-4 agent email was correctly carried (GUI/Workspace-gated). 6c.13 is the **high-trust** capabilities session: the **payment prepare-and-surface flow** and the **1Password account-access pattern**, both heavily surface-gated because real payments are irreversible. Read the 6c.12 closure, `JUDGEMENT-DOCTRINE.md`, and `6c11-OAUTH-FLIP-BRIEF.md` (for WS-4) before acting._
 
 ## Run this in a Screen-Sharing GUI terminal (D20)
-WS-4 (Workspace + Internal OAuth consent) and any interactive `op`/1Password auth (F70) are **GUI-bound**. 6c.12 was SSH-only and had to carry WS-4 — don't repeat that. Open from a Terminal inside Screen Sharing so the restart/consent/`op signin` paths are available.
+WS-4 (Internal OAuth consent) and any interactive `op`/1Password auth (F70) are **GUI-bound**. 6c.12 was SSH-only and had to carry WS-4 — don't repeat that. Open from a Terminal inside Screen Sharing so the restart/consent/`op signin` paths are available. **Exception:** the WS-4 *Workspace standup* (Phases 1–4 in Stage 3) is pure browser + Cloudflare work Peter can do from anywhere, ahead of the GUI session — only Phase 5 (OAuth wiring) needs the Mini/GUI.
 
 ## Stage 0 — Ledger + sanity (no mutating work until ALL-GREEN)
 - Deviations currency: **P6-83/84 present**; re-anchor the log sha at open.
@@ -15,8 +15,19 @@ Design constraint [P6-45] + Peter's philosophy: **the spend ceiling lives at the
 ## Stage 2 — Accounts: the 1Password access pattern (F70-aware)
 Stand up how an agent retrieves an account credential when needed: `op` CLI against vault "OpenClaw" (EU shard my.1password.eu), `op read --no-newline | sha256sum` for display-immune verify. Known blocker [F70]: `op` is unauthenticated under launchd (no `OP_SESSION`) — so unattended retrieval needs a service-account/token pattern, not interactive `op signin`. Decide + wire the minimal-privilege path; secrets never land in workspace files; display-immune checks only (F21/F51).
 
-## Stage 3 — WS-4 agent email `marie@fedchenkov.com` (the carry — GUI)
-Stand up Marie's send-capable identity (Charlotte stays on Soveren to sunset). `gmail.modify` is already granted (send-capable), so once the fedchenkov.com Workspace mailbox + the Internal-OAuth graduation land (per `6c11-OAUTH-FLIP-BRIEF.md` Path B), wiring is small. Sends are L1 prepare-and-surface (draft→approve) until a class graduates.
+## Stage 3 — WS-4 agent email `marie@fedchenkov.com` — STARTED at 6c.12 close (Workspace standup guided live)
+Stand up Marie's send-capable identity (Charlotte stays on Soveren to the sunset). `gmail.modify` is already granted (send-capable), so once the mailbox + Internal-OAuth graduation land, wiring is small.
+
+**Decisions locked (Peter, 6c.12 close):** account structure = **`peter@fedchenkov.com` super-admin + `marie@fedchenkov.com` standard user** (2 seats, clean separation — the agent never holds admin); DNS registrar = **Cloudflare**; plan = **Business Starter** (~$7/user/mo, 14-day trial — verify live price on signup); **every created password → 1Password "OpenClaw"**. Domain `fedchenkov.com` already owned, nothing set up yet.
+
+**Phases 1–4 — Peter's browser + Cloudflare (no Mini/GUI needed; Claude guides live):**
+1. **Workspace + admin** — workspace.google.com → Start free trial → business info → **"Yes, I have a domain"** (⚠️ never let Google *register* a new one) → `fedchenkov.com` → create admin **`peter@fedchenkov.com`** (strong pw → 1Password) → **Business Starter** trial (payment method, no charge in trial).
+2. **Verify domain** — Google issues a `google-site-verification=…` **TXT** → Cloudflare (dash → fedchenkov.com → DNS → Records → Add: type **TXT**, name **`@`**, content = the string, **DNS only**) → back in Google click **Verify**.
+3. **Route email (MX)** — add Google's MX at Cloudflare (use whatever the Google wizard shows — current new-setup is a single **`smtp.google.com` priority 1**; older guidance lists the 5 `ASPMX…` records; **MX = DNS only**, remove any conflicting existing MX).
+4. **Create the user** — admin.google.com → Directory → Users → **Add new user** → `marie@fedchenkov.com` (**standard user, NOT admin**; strong pw → 1Password) → send a test email both ways to confirm the mailbox is live.
+
+**Phase 5 — Claude's OpenClaw wiring (GUI session, AFTER the mailbox exists):**
+5. Graduate OAuth to **Internal** on a GCP project inside the fedchenkov.com org (move/own `openclaw-pf` or a new project in-org) per `6c11-OAUTH-FLIP-BRIEF.md` Path B → run the consent for `marie@fedchenkov.com` (GUI/D20) → mint a durable cred JSON → bind for Marie (helper reads `/creds/google.json`; decide identity *swap* vs *second mailbox*) → add a **send** verb to `gmail_helper.py` (gmail.modify already covers send). Sends stay **L1 prepare-and-surface** (draft→approve) until a class graduates. **F26:** a real prepared+approved send from `marie@fedchenkov.com`.
 
 ## Stage 5 — Verify (F26, strict cost) + Stage 6 — Close
 Exercise each capability through a **real but cheap** turn (single; tight; the real gateway path, not embedded-CLI — [P6-81]); a capability is live only on a delivered artefact (a surfaced proposal counts for payments — do NOT live-pay to test). Close: deviations additive; `SESSION-6c.13-CLOSURE.md`; `SESSION-6c.14-OPENER.md` (the **acceptance gate** — [P6-76]). Re-anchor shas; commit `_session-docs/`.
