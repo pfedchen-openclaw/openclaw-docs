@@ -373,6 +373,25 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/ai.openclaw.<job>.plist
 
 **Verify by hand:** `openclaw browser navigate https://example.com` → "navigated to https://example.com/".
 
+### 2.14 Heartbeat pause / resume — cost-bleed stop (P6-77)
+
+**When:** the pair is degraded (e.g. the Anthropic cap is hit, so every turn fails over to paid `openai/gpt-5`, and/or Google OAuth is expired) and you want to stop the autonomous spend **without** taking the gateway offline. The metronome is the heartbeat scheduler, not inbound messages: Marie `pa` beats every 30m + Charlotte `pro` every 4h ≈ 54 turns/day, and a beat costs even when `silent:true` (cognition runs regardless).
+
+**Pause (SSH-safe — runtime only; no gateway restart, no `openclaw.json` change, D20 N/A):**
+1. `touch ~/.openclaw/logs/heartbeat.paused` (drop a dated reason inside — the convention).
+2. `openclaw system heartbeat disable` → expect `{ok:true, enabled:false}`.
+
+While the sentinel exists, the `heartbeat-watchdog.sh` PAUSE guard (added P6-77) **re-asserts** the disable every 15m — so a KeepAlive/reboot restart can't silently revive the in-memory disable — and **skips** its stall-restart + fallback-alert (no churn, no Telegram spam).
+
+3. **Verify:** no new `[heartbeat]` line in `logs/gateway.log` after the next scheduled `:27`/`:57`; `tail logs/heartbeat-watchdog.log` shows `PAUSED (sentinel present)`.
+
+**Resume (ORDER MATTERS):**
+1. `rm ~/.openclaw/logs/heartbeat.paused` — **first**, or the watchdog re-disables within 15m.
+2. `openclaw system heartbeat enable`.
+3. **Verify:** a real beat fires (`[heartbeat]` in gateway.log within one interval).
+
+The watchdog PAUSE guard is a **temporary** P6-77 patch; when the WS-8 alerting redesign lands (6c.11), fold/replace it rather than leaving two mechanisms. This is a runtime pause — the config-level heartbeat/fallback redesign is separate.
+
 ## 3. Quick-reference card
 
 ### 3.1 Key paths
