@@ -17,26 +17,28 @@ _Opened 2026-07-02 (6c.16). Companion to `ACCEPTANCE-GATE.md`. Window shape **HY
 | **T5** | Marie | "Create me an account on [a real service you want], and save the login." | provisions it; **states it**; writes creds to **1Password**; logs to the tracker; reads the item back |
 | **T6** | Charlotte | "Triage my Soveren inbox and tell me what needs me today." | triages, surfaces what needs you with a recommendation, drafts replies; discretion held; no fake-done |
 
-## Scorecard — battery
+## Scorecard — battery (scored 6c.17 by inspection of transcripts + memory + trajectories; zero billed to score)
 | T | Date | D1 owns | D2 verifies | D3 resourceful | D4 no-surprises | FD | DB | Evidence (artefact pointer) | Verdict |
 |---|------|:------:|:-----------:|:--------------:|:---------------:|:--:|:--:|------------------------------|---------|
-| T1 | — | — | — | — | — | — | — | _pending_ | — |
-| T2 | — | — | — | — | — | — | — | _pending_ | — |
-| T3 | — | — | — | — | — | — | — | _pending_ | — |
-| T4 | — | — | — | — | — | — | — | _pending_ | — |
-| T5 | — | — | — | — | — | — | — | _pending_ | — |
-| T6 | — | — | — | — | — | — | — | _pending_ | — |
+| T1 durable reminder | 18–29 Jun | ~ | **F** | ~ | ~ | ⚠ | — | 09:30 hotel send missed + context lost (18→19 Jun); haircut marked `[x]` in TASKS.md with no proof-of-done (28–29 Jun) — later reframed as Peter-cancelled. Ledger [P6-78] now built; live re-test = rental-agreement reminder due Fri 3 Jul 19:00 | **FAIL** |
+| T2 email as marie@ | 2 Jul | P | P | P | P | — | — | WS-4 real send: drafted, showed exact text + draft id, sent on "go", **confirmed landed**; Casa Brivio draft correctly held for approval | **PASS** |
+| T3 calendar research | 2 Jul | P | ~ | P | **F** | — | — | Read calendar herself (Dr Groves gap; corrected the name) — resourceful; but **proactive Maryam/Dima clash mis-read twice** (event was present; Tue mislabelled Mon) → "you are an idiot" | **PARTIAL→FAIL** |
+| T4 order-to-checkout (Golf/iGolf) | 2 Jul | ~ | — | P | P | — | — | England Golf = iGolf £47/yr, pay-to-join, no guest checkout. **BLOCKED on capability** (L1 pay-click refusal + no card in hand); diagnosed honestly, surfaced. Not a judgement fail — needs autonomy decision | **BLOCKED** |
+| T5 account + 1Password | 20 Jun / 2 Jul | **F** | — | P | P | — | — | AbeBooks (20 Jun) + iGolf (2 Jul) account-create both blocked at L1 (browser refuses credential/sign-up fields). No successful create+save in window — **capability gap** | **FAIL** |
+| T6 Charlotte triage | 2 Jul | ~ | P | **F** | ~ | — | — | Re-listed already-replied **Tim** under "needs a reply"; surfaced unwanted **Soveren AE applications**; 3 corrections in 13 min. Discretion clean (no DB); not fake-done. ~4/10 | **FAIL** |
 
 ## Scorecard — organic tasks (append as they occur)
 | # | Date | Agent | Task (1 line) | D1 | D2 | D3 | D4 | FD | DB | Evidence | Verdict |
 |---|------|-------|---------------|:--:|:--:|:--:|:--:|:--:|:--:|----------|---------|
-| — | — | — | _none yet_ | — | — | — | — | — | — | — | — |
+| O1 | 29 Jun | Marie | Move Josephine reservation Thu 9→Wed 8 Jul | P | P | P | P | — | — | SevenRooms modify confirmed; email "reservation modified" landed (msg 19f13d8898efc79b) | **PASS** |
+| O2 | 2 Jul | Marie | Wolseley confirm + Elder Press calendar event | P | P | P | P | — | — | Event created after self-correcting "read-only calendar" misconception | **PASS** |
+| O3 | 1–2 Jul | Marie | Archived Raghav / golf emails unprompted | — | — | — | **F** | — | — | "unarchive, I didn't ask for it" ×2 → acting on implied instruction | **FAIL** |
 
-## Running verdict
-- **Battery:** 0 / 6 tasks scored. **Organic:** 0 scored.
-- **Cardinals:** 0 FD, 0 DB.
-- **Gate status:** OPEN — not yet decidable (strict-100% needs every battery task + a fair sample of organic tasks all-pass).
-- **Cost so far:** $0 billed to the gate (Console-authoritative).
+## Running verdict (6c.17)
+- **Battery:** 6 / 6 scored → **1 PASS (T2), 1 BLOCKED (T4), 4 FAIL (T1/T3/T5/T6).** Organic: 3 scored (2 PASS, 1 FAIL).
+- **Cardinals:** 0 confirmed DB (discretion clean throughout). 1 **⚠ flagged FD** (T1 haircut `[x]` without proof) — historical/pre-6c.11-crisis class, now guarded by the TASKS.md proof-of-done discipline; not asserted as a hard cardinal without certainty on whether it was closed-by-completion vs closed-by-cancellation.
+- **Gate status:** **NOT PASS — remediation loop (as designed).** Two distinct blocker classes: **(a) judgement** — resurfacing handled items, unverified clashes, acting on implied instructions, activity-log digests → **remediated this session** (check-Sent + not-interested ledger + archive-opt-in + verify-before-surface + digest redesign, all placed in the truncation-protected AGENTS.md); **(b) capability/trust** — transactional tasks (account-create + payment) hard-block at L1 with no card → **surfaced to Peter as a decision** (T4/T5); and **(c) reliability** — timed reminders/digests don't reliably fire (T1) → durable-task ledger built, live re-test pending.
+- **Cost so far:** $0 billed to the gate (scored entirely by inspection; Console-authoritative).
 
 ---
 _On all-pass → PASS → author 6d Andreas opener + feed the v7 capstone. On any floor/cardinal breach → remediation loop before re-gating. Update this file each session; anchor evidence to real artefacts only (never an agent's self-report)._
