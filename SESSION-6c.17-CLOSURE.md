@@ -23,8 +23,8 @@ _(Also informed, not asked: the 120K-cap ↔ brief-fidelity cost/quality tension
 
 ## End-state (anchors)
 - **`openclaw.json`: `8a6e2a19d9d5`/10096B** — A-7 clean, live==last-good, 600/staff. Pin 2026.4.22; sandboxes `capable-2026-06`. **No config mutation.**
-- **Brief edits (direct):** pa AGENTS `a6aba8f23e51`→`0486c8c5f03d`/14347B · HEARTBEAT `3dddeb41b879`→`74ec8c4a45a1` · PA-PLAYBOOK `cfe9c034b2cf`→(digest §; +browser-prose from slim — re-anchor) · DECISIONS `dd0839fd21ba`→`58145316036a`. pro AGENTS `7b0db6f70aae`→`0f78a4132f1b`/12910B · HEARTBEAT `0bdef99de68a`→`1c9578cfd97e` · PRO-PLAYBOOK `a16c9e24336b`→(digest §; +prose — re-anchor) · DECISIONS `1f121e417498`→`97fc83f5fc65`.
-- **TOOLS.md slim (subagent):** pa/pro TOOLS.md + both PLAYBOOK re-anchored at 6c.18 open (verbose prose moved to PLAYBOOK, invocations preserved).
+- **Brief edits (direct):** pa AGENTS `a6aba8f23e51`→`0486c8c5f03d`/14347B · HEARTBEAT `3dddeb41b879`→`74ec8c4a45a1`/2697B · DECISIONS `dd0839fd21ba`→`58145316036a`/7893B. pro AGENTS `7b0db6f70aae`→`0f78a4132f1b`/12910B · HEARTBEAT `0bdef99de68a`→`1c9578cfd97e`/3316B · DECISIONS `1f121e417498`→`97fc83f5fc65`/6122B.
+- **TOOLS.md slim (subagent — invocations verified preserved, all key verbs grep-present):** pa TOOLS `→7162f0708804`/16525B (−~2.5KB), pro TOOLS `→df7cfee555f6`/13078B; verbose browser/docs prose moved into pa PA-PLAYBOOK `1edf5a88f378`→`fcabd04ec93c`/18243B (also holds the digest redesign) + pro PRO-PLAYBOOK `5a764d402b5f`→`3287a1052f0c`/11222B. **Honest note:** the slim was conservative (safety-first — every invocation kept), so Marie's TOOLS.md is still ~16.5KB; the real truncation levers remain (a) rules-in-AGENTS.md (done) and (b) the config decision ([P6-93]). Monitor the canary at 6c.18.
 - **Scripts:** `overnight-verify.sh` `57f9883a654c`→`4f8462f0f30b`/5815B (dryrun no longer pollutes the log). **Deviations:** [P6-92/93/94] appended additive → log `78a6053c71d7`→`93976b5fb8b3`/234323B.
 - **New docs:** scorecard updated (battery 6/6 scored). Backups of edited briefs in scratch `6c17-brief-backup/` + `6c17-tools-backup/`.
 
