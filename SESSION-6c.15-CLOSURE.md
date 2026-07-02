@@ -14,13 +14,13 @@ _2026-07-02. **GUI/Screen-Sharing session** (`launchctl managername` = `Aqua`; D
 ## End-state (anchors)
 - **`openclaw.json`: `8a6e2a19d9d5`/10096B** — A-7 clean, live==last-good, 600/staff. Pin **2026.4.22**; both containers `capable-2026-06`; gateway restarted (config + 120K cap + 2h beat live).
 - **New host files:** `agent-creds/marie-fedchenkov.json` `43353284e50f`/416B/600 (deny-Read).
-- **Changed files (SHA-anchored):** `agent-creds/gmail_helper.py` + `agent-tools/gmail_helper.py` `5bc5d7b73a4e`/10646B (644); `workspace-pa/TOOLS.md` `8fa873cd295c`/19379B; `workspace-pa/AGENTS.md` `a6aba8f23e51`/12038B. **Deviations:** [P6-90] appended additive; log now `960b55daff29`. _(workspace-pa + agent-creds are live-runtime, untracked by the top-level repo; only `_session-docs` is committed.)_
+- **Changed files (SHA-anchored):** `agent-creds/gmail_helper.py` + `agent-tools/gmail_helper.py` `5bc5d7b73a4e`/10646B (644); `workspace-pa/TOOLS.md` `8fa873cd295c`/19379B; `workspace-pa/AGENTS.md` `a6aba8f23e51`/12038B. **Deviations:** [P6-90] appended additive (+ [P6-88] carry closed: retired SA deleted); log now `8b7e51c124dd`. _(workspace-pa + agent-creds are live-runtime, untracked by the top-level repo; only `_session-docs` is committed.)_
 
 ## Carried → 6c.16 (deliberately, not lost)
 - **Overnight automation first real test:** confirm at next open that 23:00 suppression + 06:55 reset fired from the logs (`heartbeat-nightwindow.log`, `session-freshstart.log`, `heartbeat.night`/`heartbeat.resumed-at`).
 - **Andreas backlog (Peter req):** a NEW OAuth app owned by the **fedchenkov.com org** (Internal consent) to replace reuse of pfedchen-owned `openclaw-pf` — minor while durable+trusted → in PRE-COS-BACKLOG.
 - **DMARC** `p=none` → tighten to quarantine/reject once reputation builds.
-- **Peter:** delete retired 1Password SA (`WUE7…`) if not done ([P6-88]).
+- ~~**Peter:** delete retired 1Password SA (`WUE7…`)~~ — **DONE (2026-07-02):** Peter deleted `openclaw-mini`/`WUE7…`; live SA `openclaw-agents` verified healthy ([P6-88]).
 - **Stale doc:** `AGENTS.md:16` "Drive is READ-ONLY … no upload yet" contradicts live drive.file write ([P6-83]) — reconcile next docs pass.
 - **Pre-Andreas milestones:** acceptance gate ([P6-76]) + v7 capstone/reconciliation. Travel = post-6d. Standing: [F59]/[P6-66] rotations, 2026.4.22 pinned, model/framework currency ([P6-74]) → Andreas.
 

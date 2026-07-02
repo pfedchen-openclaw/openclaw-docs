@@ -9,7 +9,7 @@ No hard GUI dependency this session unless a gateway restart or LaunchAgent chan
 - **Deviations currency:** P6-90 present; re-anchor the log sha at open.
 - **WS-4 still live ([P6-90]):** `agent-creds/marie-fedchenkov.json` `43353284e50f`/416B/600; `gmail_helper.py` `5bc5d7b73a4e` (bind-source + `agent-tools` mirror); `docker inspect` pa shows `/creds/marie-send.json` bound; `send`/`send-draft` REFUSE non-marie creds (SEND_IDENTITIES floor). marie@ OAuth alive (a `labels` read exit 0). Docs: TOOLS.md `8fa873cd295c`, AGENTS.md `a6aba8f23e51`.
 - **★ Overnight automation — FIRST REAL TEST (the 6c.15 amber):** confirm from logs that last night the LaunchAgents actually fired: `heartbeat-nightwindow.log` has a **23:00 NIGHT (suppressed)** + **07:00 DAY (restored)** entry (NOT `[DRYRUN]`, NOT manual); `session-freshstart.log` has a **06:55** archive+reset; `heartbeat.night` present 23:00–07:00 then absent by day; `heartbeat.resumed-at` mtime ~07:00; `gateway.log` shows the quiet window actually quiet (no beats 23:00–07:00) and `agents/*/sessions/archive/<date>/` has a ~06:55 morning archive. If any didn't fire, diagnose (bootstrap state / calendar-interval / sleep-wake) and fix — GUI if a restart/bootstrap is needed.
-- **1Password green:** `op whoami` = `openclaw-agents` SA (`6LYBZQU6…`); confirm Peter **deleted the retired SA** (`WUE7…`).
+- **1Password green:** `op whoami` = `openclaw-agents` SA (`6LYBZQU6…`). (Retired SA `openclaw-mini`/`WUE7…` deleted 6c.15 — carry closed.)
 
 ## Stage 1 — the work (Peter to steer priority)
 With the assistant pair now genuinely capable (Gmail read+draft, calendar edit-rights, send-as-marie, payments prepare-and-surface, 1Password account-provisioning), the pre-Andreas gate is **usefulness, not more capability**:
@@ -27,5 +27,4 @@ Reversible build runs without prompting; **surface irreversible/destructive:** r
 - **Andreas backlog (Peter req, 6c.15):** new OAuth app owned by the **fedchenkov.com org** (Internal consent) to replace reuse of pfedchen-owned `openclaw-pf` — minor while durable+trusted; in `PRE-COS-BACKLOG.md`.
 - **DMARC** `p=none` → tighten to quarantine/reject once `fedchenkov.com` reputation builds.
 - **Stale doc:** `AGENTS.md:16` "Drive is READ-ONLY … no upload yet" vs live drive.file write ([P6-83]) — reconcile in the v7 pass.
-- **Peter:** delete retired 1Password SA (`WUE7…`).
 - Standing: acceptance gate + v7 capstone = the pre-Andreas milestones; **Travel = POST-6d** ([P6-90]/roadmap §3a); per-turn tool/token ceiling ([P6-79] canary) + Telegram back-scroll ([P6-78]) → runtime work; [F59]/[P6-66] rotations; 2026.4.22 pinned; model/framework currency ([P6-74]) owned by Andreas.
