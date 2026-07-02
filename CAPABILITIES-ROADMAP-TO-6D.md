@@ -47,7 +47,7 @@ Each is a **single-purpose session**, opened fresh with the prior closure, **clo
 | 6c.8 | **@fedchenkov.com email** (slimmed) | Google Workspace on the domain (verify, MX, OAuth). **`sophie@` dropped** (Sophie deferred). **Marie's `marie@fedchenkov.com` mailbox is a pre-or-post-6d decision** — driver: move Marie off Peter's personal Gmail (`pfedchen@gmail.com`); decide whether to do it before 6d or after. Pulls P6-8/D24 forward only if taken pre-6d | If taken: Marie sends/receives from `marie@…` end-to-end |
 | — | **Correspondence pattern-review gate (pre-6d, B7/P6-33)** | Review-and-fix the agents' real correspondence (drafts, tone, signature, error-surfacing, autonomy gating) and **lock the patterns** — Andreas inherits these at 6d (P6-26). Not a build session; a quality gate over the practice-week output | Correspondence patterns reviewed, fixed, and frozen as the canonical patterns CoS will inherit |
 | 6c.10 | **Pre-6d consolidation** | **Reconcile the canonical snapshot docs from the deviations deltas** — STATE-OF-NATION, RUNBOOK (Claude Code workflow, gmail helper, calendar-via-direct-API, autonomy/permission model, git docs-repo, quiesce-during-builds), ARCHITECTURE (→v7 only if structural ADRs warrant), and fold crystallised lessons into PHASE-0-LESSONS/TIER-1-KEY-PATTERNS; commit. Hand the ongoing reconciliation cadence to Andreas (CoS: operator docs + maintenance). Generate the fresh 6d opener | Canonical snapshot docs reflect reality and are committed; clean 6d opener generated |
-| 6d | **CoS (Andreas)** | Build on the proven **pair**; AGENTS/TOOLS derived from current canonical patterns (P6-26); inherits all shared capabilities, F26 def-of-done, P6-23/24/25, and the reviewed correspondence patterns | (its own plan) |
+| 6d | **CoS (Andreas)** | Build on the proven **pair**; AGENTS/TOOLS derived from current canonical patterns (P6-26); inherits all shared capabilities, F26 def-of-done, P6-23/24/25, and the reviewed correspondence patterns. **Owns cost governance (Peter, 2026-07-02, [P6-85]): builds & iteratively improves a PER-TASK cost tracker** (see-and-correct each task's spend while usage patterns are tuned; Andreas decides format/output/cadence) **plus the spend-visibility canary** ([P6-57]#3/[P6-82]) | (its own plan) |
 | post-6d | **Sophie** (family coordinator) — **deferred** | Stood up once the family surface is ready; derived from the then-current Marie/Charlotte/Andreas patterns (P6-26); her mailbox, family calendar, Telegram opt-in | (own plan; see Deferred backlog + §3a build order) |
 
 ## 3a. Build order — agents (revised P6-33, CoS-first)
@@ -55,7 +55,7 @@ The pre-6d **trio shake-out is removed.** Order:
 1. **Marie** (PA) — ✓ live.
 2. **Charlotte** (ProA) — ✓ live.
 3. **Andreas** (CoS, 6d) — **next**, on the proven pair.
-4. **Travel / Research** — after CoS.
+4. **Travel / Research** — after CoS. **(Confirmed 2026-07-02, Peter, [P6-85]: the Travel agent is POST-Andreas — build only once Marie+Charlotte+Andreas do what's expected. Corrects the drift in recent openers that listed Travel at "6c.15"/pre-6d; travel is post-6d.)**
 5. **SDR** — at Hylean active-sales (driven by need, not the build clock).
 6. **Finance** — after Drive / sensitive-data handling is proven.
 7. **Sophie** (family coordinator) — once the family surface is ready (multi-human trust piloted via Marie first).
