@@ -16,9 +16,9 @@ _2026-07-02 (opened 21:45, ~1h after 6c.16 closed). **SSH — no gateway restart
 ## Acceptance-gate battery — scored by inspection (zero billed), scorecard updated
 T2 email-as-marie@ **PASS** (real WS-4 send, confirmed landed) · T4 order-to-checkout **BLOCKED** (capability) · T1 durable-reminder **FAIL** (missed timed fire; ⚠ historical fake-close, now [P6-78]-guarded; live re-test = rental reminder due Fri 3 Jul 19:00) · T3 calendar-research **PARTIAL→FAIL** (read herself good; proactive clash mis-read twice) · T5 account+1Password **FAIL** (capability) · T6 Charlotte triage **FAIL** (~4/10). Organic: Josephine move + Wolseley/Elder-Press **PASS**; unprompted archives **FAIL**. **Verdict: NOT PASS — remediation loop.** Two blocker classes remain: **capability/trust** (transactional, T4/T5 — Peter's decision) and **reliability** (timed reminders/digests, T1). Judgement class remediated this session; re-run under the real Telegram path next window.
 
-## Surfaced to Peter (decisions — put via AskUserQuestion at close)
-1. **Marie's transactional autonomy** (the #1 frustration): provision the capped "Marie PA" card so she completes checkouts within the £200/mo cap (deferred L3+ step; 2FA-approve-per-charge) · vs keep prepare-and-handover, smoothed · vs let her finish free account-creation only (payments stay hand-off).
-2. **The stuck golf items:** set up England-Golf/iGolf membership + the Pro Agenda golf-lesson login (into warmed Chrome + 1Password) so she can drive them to pre-pay, or leave.
+## Surfaced to Peter (decisions — put via AskUserQuestion at close) → ANSWERED
+1. **Marie's transactional autonomy → "PROVISION THE CAPPED CARD."** Peter chose to unblock end-to-end: load the £200/mo "Marie PA" card so she completes checkouts within the hard issuer cap, with a Revolut approve-per-charge prompt each spend. This is the deferred L3+ step ([P6-45]/PA-PLAYBOOK §Payments) — **the 6c.18 lead build** (auth-profiles provisioning host-side from 1Password, the 2FA-pause flow, Finance log; GUI/1Password + restart, D20). **Not started this session** (irreversible-class, needs Screen Sharing + care).
+2. **Golf items → "LEAVE BOTH FOR NOW."** No iGolf / Pro Agenda setup this cycle. The autonomy-neutral expectation-setting brief already covers how Marie handles such asks meanwhile.
 _(Also informed, not asked: the 120K-cap ↔ brief-fidelity cost/quality tension — default is the file-slim done this session + monitor; escalate to session-compaction / cap-raise if truncation persists.)_
 
 ## End-state (anchors)
