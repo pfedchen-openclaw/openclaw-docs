@@ -80,6 +80,7 @@ M1 quarterly Python google-* dep upgrade (first ~Aug 2026) · M2 gogcli/Brew upg
 - **D27 — Colima VM auto-start plist** [NICE] — partly addressed by P6-2 activation; unattended reliability wants VM persistence (the 6c.9 socket-health-check is the nearer-term lever).
 - **P6-36 workspace `.cache`/`.config` cruft** [NICE] — one-time delete-and-surface of stale 11-Jun dirs in both workspaces.
 - **P6-20 Charlotte avatar** [NICE] — style locked; `/setuserpic` + `set-identity` application pending; Andreas avatar = final 6d step.
+- **P6-90 OAuth-app org ownership** [NICE→Andreas] (Peter req, 6c.15) — Marie's `marie@fedchenkov.com` send OAuth **reuses the pfedchen-owned `openclaw-pf` client** (durable, External/In-production, now admin-trusted in the fedchenkov.com Workspace). Cleaner long-term: a NEW OAuth app **owned by the fedchenkov.com org** with an **Internal** consent screen (no cross-org external-app dependency, no unverified warning). Minor while the current app works; for Andreas to weigh when consolidating the Google stack under one org.
 
 ---
 
