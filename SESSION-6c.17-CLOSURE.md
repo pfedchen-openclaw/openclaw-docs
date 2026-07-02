@@ -21,6 +21,13 @@ T2 email-as-marie@ **PASS** (real WS-4 send, confirmed landed) · T4 order-to-ch
 2. **Golf items → "LEAVE BOTH FOR NOW."** No iGolf / Pro Agenda setup this cycle. The autonomy-neutral expectation-setting brief already covers how Marie handles such asks meanwhile.
 _(Also informed, not asked: the 120K-cap ↔ brief-fidelity cost/quality tension — default is the file-slim done this session + monitor; escalate to session-compaction / cap-raise if truncation persists.)_
 
+## Recovered `/btw` side-notes ([P6-95]) — incorporated + committed at Peter's request
+Peter had submitted several requests via Claude's `/btw` command in prior chats; they were lost on `/clear` (never reached the committed docs). Re-stated and now incorporated durably:
+1. **Peter-supplied credentials — save + use.** Peter can hand Marie his own existing login for a named service (Pro Agenda, Preply, Amazon, BA…); she saves it to 1Password + uses it in the warmed Chrome, absolute secret-hygiene → **AGENTS.md §Payments + PA-PLAYBOOK §Accounts & credentials + DECISIONS.md**. The save→login **actuation** is a 6c.18 build (companion to the card). Concrete unblock for the golf/Pro-Agenda class.
+2. **Google app → recreate in a Fedchenkov Workspace** (not bolt fedchenkov onto the pfedchen app); **Andreas decides if worth it** → sharpened PRE-COS-BACKLOG **P6-90**.
+3. **Daily context-wipe = logged experiment**; watch agent quality; **Andreas improves it** if it suffers → new PRE-COS-BACKLOG item ([P6-95]).
+_Process fix: sweep `/btw` notes into the deviations log/backlog every close so they can't be lost on `/clear`._
+
 ## End-state (anchors)
 - **`openclaw.json`: `8a6e2a19d9d5`/10096B** — A-7 clean, live==last-good, 600/staff. Pin 2026.4.22; sandboxes `capable-2026-06`. **No config mutation.**
 - **Brief edits (direct):** pa AGENTS `a6aba8f23e51`→`0486c8c5f03d`/14347B · HEARTBEAT `3dddeb41b879`→`74ec8c4a45a1`/2697B · DECISIONS `dd0839fd21ba`→`58145316036a`/7893B. pro AGENTS `7b0db6f70aae`→`0f78a4132f1b`/12910B · HEARTBEAT `0bdef99de68a`→`1c9578cfd97e`/3316B · DECISIONS `1f121e417498`→`97fc83f5fc65`/6122B.
