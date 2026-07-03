@@ -3,7 +3,7 @@ _Opener · generated at 6c.19 close (2026-07-03). 6c.19 built + host-validated M
 
 ## Stage 0 — Ledger (no mutating work until GREEN)
 - **A-7:** live == last-good == **`82a293d97aac`/10097B**, 600/staff. Pin 2026.4.22. Sandboxes `capable-2026-06`. (Read openclaw.json by structure/script — Bash deny blocks its name + `cat`/`jq`/`sha256sum`/`stat`; agent-creds token path is deny-guarded too.)
-- **Deviations currency:** P6-100 present; re-anchor the log sha at 6c.19 commit.
+- **Deviations currency:** P6-101 present (log `c1c04c4b6960`/256647B); sequence P6-1…101 gap-free + no dangling refs (carry-chain audit, [P6-101]). Run the [P6-101] carry-chain check at THIS close too.
 - **★ 07-04 bootstrap-held check (the deferred proof):** `grep 'truncating in injected context' logs/gateway.err.log | grep 2026-07-04` should be **empty** for `pa:main`/`pro:main` on the morning-fresh sessions; confirm **Charlotte actually swept** the Soveren inbox on her first morning beat (function-level, not beat-liveness — [P6-98]). If truncation recurred, consider a further modest `bootstrapTotalMaxChars` raise or the optional slim.
 - **Build artefacts present?** `scripts/pay-fill.sh` `93f5134cb383` · `scripts/op-list.sh` `e125c22e49b0` · `shared/finance-ledger.md` `05d08b5c7956` · PA-PLAYBOOK `baa7e657ce6c` · AGENTS `aa17dad9bf22`. Config repo `_session-docs` committed at 6c.19 close.
 
