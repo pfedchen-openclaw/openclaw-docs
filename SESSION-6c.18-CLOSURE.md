@@ -20,7 +20,7 @@ _2026-07-03. Started SSH (recon/diagnosis/decisions), finished **GUI/Screen-Shar
 - **`openclaw.json`: `82a293d97aac`/10097B** — `bootstrapTotalMaxChars` 75000→110000; A-7 clean (live==last-good), 600/staff. Rollback: last-good was `8a6e2a19d9d5` pre-verify.
 - **Config repo:** `overnight-verify.sh`→`9186db494779` (commit `25077c9`); new `scripts/stage-bootstrap-raise.py` + `scripts/sync-lastgood.py` (to commit at close).
 - **Live-bind brief (not repo-tracked):** pro TOOLS.md `df7cfee555f6`→`44ddafb744fb`/13466B (batch-archive line); backup in scratch `6c18-brief-backup/`.
-- **Deviations:** [P6-96/97/98] appended additive → log `<re-anchor at commit>` (docs repo).
+- **Deviations:** [P6-96/97/98] appended additive → log `f52a068c300e`/248340B (docs repo). Post-restart: no night sentinel + `[heartbeat] started` 14:01:35 → beats intact.
 - **Cost:** 1 Sonnet gateway smoke-test (sanctioned single test, immaterial). No loops/Opus/batches.
 
 ## Carried → 6c.19 (GUI, Peter-paced)
