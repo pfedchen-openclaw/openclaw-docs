@@ -19,7 +19,10 @@ Peter reviewed the day's Telegram with Marie and flagged underperformance + cost
 - **All 6c.19 payment threads** (real-charge F26 on a plain merchant, autonomous login, Stripe/iframe strategy, battery re-run, T1 proof, optional slim, v7 capstone) — untouched by this interstitial, still live in the 6c.20 opener.
 
 ## Ledger at close
-- openclaw.json / last-good: **`db78bba1aea8`/10101B**, 600/staff (A-7 clean). sanitised `3de319f97458`/10132B. Pin 2026.4.22.
+- openclaw.json / last-good: **`da191cf1920d`/10099B**, 600/staff (A-7 clean) — Marie reverted to Opus per [P6-106] (net across the evening: only Charlotte→Sonnet). sanitised refreshed. Pin 2026.4.22.
 - workspace-pa: AGENTS `3b967ca6f983` · PA-PLAYBOOK `45022cfe7876` · MEMORY `4c9f06fc13bb` · DECISIONS `5f20893ac60e` · SOUL `3c37d4515bdb`. commits `f9af477` (behaviour) + `609dd1e` (media). workspace-pro `9355160`.
 - .openclaw repo `7d5c2e6`. Deviations log **`376a80668e44`/276491B**, **P6-1…105 gap-free, no dangling refs** ([P6-101] audit ✓).
 - Cost discipline held: every analysis + verification by inspection / free backfill; **no billed agent test-turn** ([P6-51]).
+
+## Update — [P6-106] (same evening, pre-test)
+Peter reviewed the split and chose **Opus for Marie's Peter-facing work** (responses + emails + booking/appt logic he values); **Sonnet stays for her autonomous pulses** (`heartbeat.model`) and for Charlotte. 2026.4.22 has **no per-turn model routing** (build+docs verified), so model=Opus / heartbeat=Sonnet is the achievable split. Marie's Opus cost is to be funded by **context-reduction levers** (`toolResultMaxChars` / `imageMaxDimensionPx` / `cacheRetention:"long"` / bootstrap trim — verified available; applied as a **post-test** tuning pass, not before tonight's run). No-loss review done — nothing dropped; Marie awaits Peter on the **Thomas German cancellation**, the **Preply password** (Jim reschedule; not yet in 1P), and **paying Thomas £45**. openclaw.json `da191cf1920d`/10099B; deviations log `656935fcd633`/279944B (P6-1…106, gap-free).
