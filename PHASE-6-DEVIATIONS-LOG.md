@@ -888,5 +888,13 @@ Peter flagged that he'd submitted several requests in prior chats via Claude's *
 
 **6c.20 priority reshuffle:** cost (④) + the 1P bridge (①) join the payments F26 (⑤) as co-leads; ②③ ride along. All need Peter present and/or the two credential unlocks (admin key, gog re-auth).
 
+### P6-109 — 6c.19→6c.20: real-cost CALIBRATION (admin key unavailable on an individual Console account) — `opus-4-7` is ~2.7× cheaper than assumed
+**Type:** cost accuracy · **Status:** DONE (calibrated + validated ~5%). **Trigger:** Peter — no "Admin keys" section in his Console (the [P6-107] URL 404s): his account is an **individual account, not an Organization**, so the Admin API / Usage-&-Cost API is unavailable. He supplied real per-model daily spend for calibration instead (Option B).
+
+- **Why no admin key:** admin keys + the cost API require a Console **Organization** (Console → Settings → Organization); an individual account shows only workspace API keys. [P6-107]'s automated real-$ path is therefore gated on org setup — **deferred** (a billing/structure change, surfaced not rushed). The API wiring stays ready to light up if an org is created.
+- **Calibration data** (Peter's actual Console spend, **personal** workspace; all others $0): Jul1 Opus $0.76 / Son $23.72; **Jul2 Opus $24.00 / Son $14.08; Jul3 Opus $75.52 / Son $4.59**. Summed exact trajectory tokens by model+type/day vs my static-rate prediction: **Opus 2.6–2.8× too HIGH** (Jul2 pred $67→act $24; Jul3 pred $194→act $75); **Sonnet spot-on** (Jul3 pred $4.55 vs $4.59). ⇒ `opus-4-7` is priced **~2.7× below** the legacy $15/$75 I assumed.
+- **Result (written to `state/cost-notify/rates.json`, gitignored → recorded here for recovery):** effective Opus **input $5.585 · output $27.926 · cacheRead $0.5585 · cacheWrite $6.982** /M (input-rate ~$5.59 solved from actuals, Anthropic's per-type structure kept); Sonnet unchanged (3 / 15 / 0.3 / 3.75). **Validated:** recompute Jul2 $25.11 (act $24.00), Jul3 $72.33 (act $75.52) — within ~5%.
+- **Consequence:** the **$7.62 / $11.49** tasks that alarmed Peter ([P6-108]④) were really **~$2.84 / ~$4.29** — 2.7× estimate inflation (the recurring "estimates wrong" problem, now measured + fixed). But the **daily total is genuinely high** (~$75 Opus on the test day) — the context-churn cost is real and stays the 6c.20 lead. cost-notify now shows a **calibrated daily total** ("Today so far (calibrated est): $X") without the admin key; per-task labelled "(cal.)". Re-check ~weekly or on any Anthropic price change; the admin-key API supersedes this if an org is ever set up.
+
 ---
 _Phase-0 `F`/`D` codes referenced above (F26, F28, F41, F46, F59, F70, D1, D20, D24, D2) live in the frozen Phase-0 log. New Phase-6 deviations continue as P6-N._
