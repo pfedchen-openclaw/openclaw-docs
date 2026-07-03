@@ -12,6 +12,11 @@ _Opener · generated at 6c.19 close (2026-07-03). 6c.19 built + host-validated M
 2. **Autonomous *login* via host-filled creds** (non-SSO sites) — designed, not built. Build + test the host filling a stored 1P credential (op-get) into a login form (session persists in the `openclaw` profile), Marie never handling it. Distinct from card-inject.
 3. **Stripe/iframe merchants** — decide the approach for the common hard case: keystroke `type` into the Stripe iframe fields (snapshot `--frame`) vs. semi-manual card entry on such sites. Test the `type` path pre-submit (no charge) to see if it survives hCaptcha/Radar on the warmed residential profile.
 
+4. **Carried from 6c.19 (deferred by the Peter-directed payments pivot — NOT dropped):**
+   - **Battery re-run** (the *judgement class* of the acceptance gate) — briefs now inject fully post-raise, so re-run and convert **T3 / T6 / digest FAIL→PASS** through the **real Telegram** path ([embedded-cli], NOT the embedded CLI). Cheapest model (Sonnet/Haiku, **never Opus**), **~$5 hard cap**, stop-and-surface if trending over ([P6-51]).
+   - **T1 reliability** — confirm the **rental-agreement reminder fired 19:00 Fri 3-Jul** with proof-of-done (now in the past — check the beat logs / the artefact first).
+   - **Optional slim** (not urgent) — **mirror the [P6-98] batch-archive line into pa TOOLS.md** (pro already has it); optionally trim early/large brief files to cut per-beat injected tokens; Peter reviews the diff. Skip if the F26 + verifications fill the session.
+
 ## Stage 5 — Verify (F26) + Stage 6 — Close
 Real charge completed through a Marie gateway turn on a plain merchant, with Peter's 2FA, logged to Finance. Close: deviations additive ([P6-101]…); `SESSION-6c.20-CLOSURE.md`; `SESSION-6c.21-OPENER.md`. Re-anchor shas; refresh sanitised snapshot only if config changed (none expected); commit `_session-docs` + config repo.
 
@@ -20,4 +25,4 @@ Reversible build runs without prompting. **Surface irreversible/destructive:** t
 
 ## Carry-forward
 - **Acceptance gate** stays OPEN — the payments capability class is unblocked in mechanism but not F26-proven; decidable once the real charge lands + T1/judgement classes hold.
-- **Andreas backlog:** function-level agent-health check ([P6-98]); `:telegram:direct` compaction-pressure; org-owned OAuth app (P6-90/95); per-task cost tracker ([P6-85]#1); autonomous-login build; Stripe-merchant fill strategy; model/framework currency ([P6-74]); DMARC tighten. Travel POST-6d. 2026.4.22 pinned.
+- **Andreas backlog:** function-level agent-health check ([P6-98]); `:telegram:direct` compaction-pressure; org-owned OAuth app (P6-90/95); per-task cost tracker ([P6-85]#1); context-wipe experiment quality-watch ([P6-95]#3); autonomous-login build; Stripe-merchant fill strategy; model/framework currency ([P6-74]); DMARC tighten. Travel POST-6d. 2026.4.22 pinned.

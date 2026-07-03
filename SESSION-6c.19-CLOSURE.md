@@ -27,6 +27,7 @@ _2026-07-03, GUI/Screen-Sharing (openclaw console; D20 ops available). Peter's d
 - **Autonomous *login* via host-filled creds** (non-SSO sites) is designed but **not built/tested** (only card-inject is). Separate follow-on.
 - **Stripe/iframe merchants** are the hard case (cross-origin fields + bot-detection) — decide per-site: attempt keystroke-`type` fill vs. semi-manual card entry. Common enough to matter.
 - **★ 07-04 morning:** verify the bootstrap fix **held through the 06:55 reset** (`grep 'truncating in injected context' logs/gateway.err.log | grep 2026-07-04` empty for pa:main/pro:main) **and** Charlotte actually swept the inbox (function-level, [P6-98]). Re-arm the one-shot verifier if automated proof is wanted.
+- **Carried from the 6c.19 opener, deferred by the payments pivot (NOT dropped):** (a) **battery re-run** (T3/T6/digest FAIL→PASS via real Telegram, cheapest model, ~$5 cap) — the judgement class of the acceptance gate; (b) **T1** — confirm the rental-agreement reminder fired **19:00 Fri 3-Jul** with proof-of-done; (c) **optional slim** — mirror the [P6-98] batch-archive line into pa TOOLS.md. All now in the 6c.20 opener Stage 1.4.
 - **Andreas backlog** (unchanged): function-level agent-health check; `:telegram:direct` compaction-pressure; org-owned OAuth; per-task cost tracker; model/framework currency; DMARC.
 
 ## Honest note
