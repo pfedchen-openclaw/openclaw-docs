@@ -15,7 +15,7 @@ _2026-07-03. **SSH — `op` admin denied here, no gateway restart / config mutat
 ## End-state (anchors)
 - **`openclaw.json`: `8a6e2a19d9d5`/10096B** — A-7 clean, live==last-good, 600/staff. No config mutation.
 - **Config repo:** `overnight-verify.sh` `4f8462f0f30b`→`9186db494779`/6635B, committed `25077c9` (P6-96, incl. the carried 6c.17 dryrun guard).
-- **Deviations:** [P6-96/97] appended additive → log grew to `<re-anchor at commit>`. **Briefs UNCHANGED this session** (slim staged to 6c.19). Sanitised snapshot NOT refreshed (no config change).
+- **Deviations:** [P6-96/97] appended additive → log `993f0cb2e801`/244158B (docs commit `34649c1`). **Briefs UNCHANGED this session** (slim staged to 6c.19). Sanitised snapshot NOT refreshed (no config change).
 
 ## Carried → 6c.19 (all Peter-/GUI-gated — legitimately not runnable over SSH)
 - **★ LEAD build (GUI/Screen-Sharing, Peter present):** (1) **bootstrap slim + raise together, verified on the post-change restart** (F26 = truncation-canary clears) — read the LIVE `bootstrapTotalMaxChars` first; slim early/large files (TOOLS lead, prose→PLAYBOOK) + lift the budget; Peter reviews the slim diff. (2) **Marie's capped card via host-mediated op-get** + the Peter-supplied-credential actuation ([P6-95] item 1) — 2FA-in-Revolut pause, Finance log, graduate the payment posture; irreversible-class → confirm before first live use.
