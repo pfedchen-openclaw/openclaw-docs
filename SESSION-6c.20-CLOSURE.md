@@ -1,0 +1,34 @@
+# SESSION 6c.20 — CLOSURE
+_Closed 2026-07-04. The session opened on the real-charge payments F26 as LEAD, but **Peter re-prioritised live** to (a) a real Banya pre-payment, (b) a mid-session Gmail-helper outage, and (c) a NEW directive — a mechanism for Marie to take over his existing accounts. Net: the payments F26 did **not** land (the one live payment was the iframe hard case → Peter paid manually), but the **credential take-over mechanism shipped + F26-proved** and a **silent multi-day Gmail outage was root-caused + fixed for both agents**. openclaw.json **UNCHANGED** by this session (`da191cf1920d`/10099B, A-7 clean)._
+
+## What landed (new P6-codes this session: 110–115)
+1. **① Credential-save bridge — BUILT, wired, and F26-PROVEN ([P6-110]/[P6-114]/[P6-115]).** The opener's priority ① (Marie's sandbox has no `op`, so she can't SAVE a credential) is **done**:
+   - `cred-save.sh` — host-mediated bridge, two modes: **generate** (new account; op generates the pw host-side; request is non-secret) and **existing** (Peter hands over his own login; request carries the pw, stored via `op-put --password-env` off-argv, then **shredded**). Fail-closed: card/token/pin/otp keys always refused; `password` refused unless `mode:existing`; `sensitive:true` refused (bank/2FA stay a manual host action). Scoped by Peter (4-Jul): dozens of **non-sensitive** accounts, TG is fine.
+   - **Queue home** = each agent's own **gitignored** `workspace-<id>/.cred-queue/` (mounted rw at `/workspace`), NOT the [P6-114]-proposed new bind-mount — cheaper (no `openclaw.json`/`sandbox recreate`) and gitignore kills the commit-leak risk. `shared/cred-requests/` was an **unreachable trap** (`shared/` isn't sandbox-mounted) — retired to a redirect breadcrumb.
+   - `cred-save-drain.sh` — scans both agents' queues; stores; writes a display-immune receipt ([P6-102]); shreds existing-mode requests; host-deletes Peter's TG credential message when the request carries `tg_chat_id`+`tg_message_id`.
+   - **Watcher LIVE:** `ai.openclaw.cred-save-watch` LaunchAgent (`/bin/zsh cred-save-drain.sh`, StartInterval 45s, RunAtLoad), bootstrapped in **gui/502**, `last exit code = 0`. Peter's "trust your judgement" = the explicit OK [P6-114] wanted for a standing secret daemon.
+   - **F26 PASS (cost-free, host-side):** a throwaway `existing` store created a real 1P item; the stored `sha256-12=b2d513bc0237 len=24` **exactly matched** the host-generated throwaway ⇒ the right secret reached 1Password entirely off my context; receipt carried the `item_id`; request shredded to a marker (no pw survived); tg-delete correctly skipped (no msg id). Upgrades [P6-114]'s dry-run unit test to a real end-to-end store.
+   - **Docs wired:** PA-PLAYBOOK §Accounts&credentials rewritten to the concrete queue how-to (both modes; stale "not yet wired" line removed; account-creation now stores via `mode:generate`); per-agent `/workspace/.cred-queue/README.md` (pa+pro).
+   - **⚠ Left for Peter:** the throwaway test item **`agm4bg3fupvstogchryz75uwri` ("ZZ-TEST-cred-pipeline", Agent-Provisioned, tag `category:test`)** — `Bash(op item delete:*)` is deny-listed, so I did NOT route around it; Peter deletes it (harmless, random throwaway pw). And the **first REAL store (Amazon) is still pending** — Marie's real-gateway task **correctly refused to fabricate** the credential she didn't have in context; Peter re-sends the Amazon email+pw over Telegram, then the live watcher files + shreds automatically.
+2. **Gmail-helper outage — root-caused + fixed for BOTH agents ([P6-112]/[P6-113]).** Marie's in-sandbox `gmail_helper` returned EMPTY (stale single-file bind-mount: the container pinned a truncated 233L/10646B inode while the host was 275L/13190B). `sandbox recreate --agent pa/pro --force` restored it; verified end-to-end (Marie sent Margarita's email; both triages worked). This had silently degraded Marie's inbox + Charlotte's Soveren triage for days.
+3. **Banya F26 recon ([P6-111]/[P6-112]).** The £75 pre-payment link is the **Trust Payments hosted-fields (cross-origin OOPIF) hard case**, not a plain merchant — autonomous card-inject deferred; Peter paid manually. Marie (real gateway turn) confirmed **19:30** to Margarita (the "07:30" was a page typo). A-12 browser-CLI corrections logged.
+4. **MEMORY.md truncation — recurrence fixed + made self-bounding.** The ★ 07-04 bootstrap check found MEMORY.md **truncated 3× on 07-04** (00:34/07:57 at 10119 chars; 10:49 at 9837 — over the 5909 limit) before Marie's cost-free self-restructure landed (→ 5403B; all 29 P-code rules kept, history moved to `reference/MEMORY-RATIONALE.md`). Added a **self-cap ≤ ~5300 rule** to the MEMORY header (one-in-one-out rotation to RATIONALE) so the append/promotion growth is bounded going forward (now 5707B). Per Peter's cost-free "(a)" choice — no bootstrap-limit raise.
+
+## What did NOT land (carried → 6c.21)
+- **★ LEAD — real-charge payments F26** (plain merchant, Marie gateway turn, Peter 2FA): **not attempted** — the only live payment was Banya (iframe hard case). Acceptance gate stays OPEN.
+- **③ Reply-watcher** — not built (Gmail outage fix consumed that slot).
+- **④ Context-lever cost tuning pass** (`toolResultMaxChars`, `cacheRetention:"long"`, `imageMaxDimensionPx`, memoryFlush tuning) — not applied; still the largest cost lever.
+- **Battery re-run** (judgement class T3/T6/digest) — not run.
+
+## SHA re-anchor (post-session)
+- **openclaw.json** `da191cf1920d`/10099B — UNCHANGED, A-7 clean (live == last-good), 600/staff. Pin 2026.4.22, sandboxes `capable-2026-06`.
+- **scripts (tracked):** `cred-save.sh` `389c46e89c10`/7778B · `cred-save-drain.sh` `4e714117e36c`/5158B · `op-put.sh` `50a56225df19`/5082B.
+- **LaunchAgent:** `ai.openclaw.cred-save-watch.plist` `464e304896b6`/1021B (gui/502, live).
+- **workspace-pa (runtime, gitignored):** PA-PLAYBOOK `65bf3fd04199`/24136B · MEMORY `e2e028cf3c64`/5707B · reference/MEMORY-RATIONALE `3b0625c7f5e0`/9482B · AGENTS `3b967ca6f983`/17406B (unchanged).
+- **workspace-pro (runtime):** `.cred-queue/README.md` `d529a706f5eb`/3284B · AGENTS `ef594735f48e` · PRO-PLAYBOOK `3287a1052f0c`.
+- **shared:** `cred-requests/README.md` `9f7917b19cb0`/786B (redirect stub).
+- **Deviations log:** sequence P6-1…115 **gap-free**, no dangling refs (mechanical [P6-101] check run post-P6-115).
+
+## Carry-chain audit ([P6-101])
+- **Mechanical:** P6-1…115 gap-free; the sole forward-ref (`cred-save-drain.sh` cited `P6-116`) was reconciled to `P6-115`. Pre-existing 21/22 dupes untouched (additive-only).
+- **Carry diff vs 6c.20 opener:** ① cred-save = DONE; ⑤ payments F26 = CARRIED (iframe pivot); ③ reply-watcher = CARRIED; ④ cost-tuning = CARRIED; ★ bootstrap check = RUN (truncation recurred → fixed + made self-bounding); Battery/T1 = CARRIED. Nothing silently dropped — all dispositioned into 6c.21.
