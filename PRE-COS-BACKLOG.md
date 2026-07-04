@@ -37,6 +37,11 @@ Tag legend: **[MUST]** before 6d · **[NICE]** opportunistic/cheap · **[DEFER]*
 - **F44 / Phase G OAuth posture** **[MUST]** — 7-day refresh-token expiry under External/Testing is a live weekly-breakage burden; the Workspace→Internal flip (~30d grace) materially de-risks Andreas's Google reliability.
 - **F59 — `GOG_KEYRING_PASSWORD` rotation** **[MUST]** — plaintext-exposed, rotation deferred by Peter; should land before Andreas runs unattended.
 
+### A.4 — Surfaced 6c.14→6c.20 (the memory/context substrate is now the HEADLINE pre-Andreas blocker)
+- **Memory / Context Architecture v2 — THE CRUX [MUST — before Andreas].** Peter (4-Jul): ~10 sessions of memory/context/bloat/compaction/cost failures are **one flaw, not many** — stop patching, refactor. Root cause = **no retrieval layer** (the only knob is inject-more↔truncate) + a **positive-feedback loop** (context→compaction→flush-append→bigger files→bigger injection) + **working/episodic/semantic memory conflated** into "write flat file + inject it". Full first-principles analysis, 6 redesign principles, and a **measurable acceptance gate** (v2 must demonstrably kill each past incident) in **`MEMORY-CONTEXT-ARCHITECTURE-REVIEW.md`** ([P6-116]). **Upstream of Andreas** — a fan-out CoS on this substrate multiplies cost + unreliability (S11 in another guise). Dedicated session = **6c.21 (the next piece of work)**. Interim stabiliser (`contextLimits.toolResultMaxChars` + `memoryFlush` dedup) is Peter-gated (openclaw.json edit + GUI restart). Folds in [P6-95] (daily context-wipe experiment, §E) and [P6-115] (MEMORY self-cap).
+- **Credential take-over mechanism — SHIPPED [P6-115]** (was the [P6-108]① gap). Host-mediated `cred-save` bridge (generate + existing modes) + per-agent gitignored `.cred-queue` + `ai.openclaw.cred-save-watch` LaunchAgent; F26-proven live (Amazon). Andreas inherits it — keep the **non-sensitive-only** + **secret-host-side-only** invariants (encode in §B).
+- **Payment-form automation reliability [→ §C track, not the memory session] ([P6-117]).** Hard gateways (Wikimedia / Trust-Payments / Stripe) defeat auto-fill (hidden custom inputs, SPA handlers, cross-origin iframes). **v1 honest posture: Marie drives to the page + surfaces the last mile; Peter completes card + click** — never claim full auto-fill on arbitrary SPAs.
+
 ---
 
 ## §B — Standing constraints Andreas must inherit (encode in his docs/guardrails)
@@ -60,6 +65,8 @@ Tag legend: **[MUST]** before 6d · **[NICE]** opportunistic/cheap · **[DEFER]*
 - **S5** — disaster-recovery dry-run on different hardware + author DR runbook.
 - **S7 / S4** — Agent Documentation System (storage, tier framework, shared KB scaffold, 1Password Note cleanup) + ongoing currency of STATE-OF-NATION/RUNBOOK.
 - **M7** — security hygiene cycle (hourly CVE watch, daily audit, weekly `npm outdated -g`, monthly key/OAuth/skills/MEMORY review, stolen-device protocol).
+- **Payment-form automation (hard gateways) [CoS-era track, [P6-117]]** — robust fill on custom-styled / SPA / cross-origin-iframe payment pages (Wikimedia, Trust-Payments, Stripe). Until built, v1 = drive-to-page + surface the last mile. Pairs with the [P6-45] gate-value-at-the-card guardrail and the autonomous-payments F26 ([P6-99]).
+- **Foundational review & refactor mandate (Peter, 4-Jul) [CoS-era, extends [P6-49]]** — once fully operational, Andreas periodically **goes back to first principles and rebuilds faulty foundations** rather than accreting patches. The memory/context saga ([P6-116]) is the exemplar: ~10 sessions patching a substrate that was missing a component. His engineering-steward remit explicitly includes **recognising the patch-on-flaw signature** (recurring incidents clustered in one area = a foundation smell) and **proposing a principled rebuild** — PROPOSE-not-EXECUTE, respects the version pin, surfaces cost/benefit. Peter's framing: "sometimes we keep patching a faulty foundation instead of going back to principles and rebuilding it so it works."
 
 ---
 
@@ -85,14 +92,15 @@ M1 quarterly Python google-* dep upgrade (first ~Aug 2026) · M2 gogcli/Brew upg
 
 ---
 
-## Top-8 shortlist (genuinely still-open *work*, priority order)
-1. **S11** inter-agent loop-protection design _(reinforced by the 6c.9 sawtooth)_ — design in v7.
-2. **S9 suite** — the bulk of what the CoS does; design in v7, build in 6d.
-3. **SR-1 / D23** doc-sync mechanism + publish decision — before doc handoff.
-4. **F64 + F68 + F70 + D21/D24** — re-enable the descoped launchd jobs (fail-fast + env + `op`-auth).
-5. **F44 / Phase G OAuth** — kill the 7-day refresh-token weekly breakage.
-6. **S6** architecture-vs-live-schema reconcile — before authoring Andreas's config.
-7. **P6-49 → P6-48** — Andreas remit + ARCHITECTURE v7 (the 6c.10 deliverable).
-8. **F31 / S5 / D18** — container retention, DR dry-run, Python 3.13 — system-surface debt to retire as Andreas adds load.
+## Top-9 shortlist (genuinely still-open *work*, priority order)
+1. **Memory / Context Architecture v2** ([P6-116], `MEMORY-CONTEXT-ARCHITECTURE-REVIEW.md`) — **the crux of reliability AND cost; upstream of everything. Dedicated session 6c.21 (next).**
+2. **S11** inter-agent loop-protection design _(reinforced by the 6c.9 sawtooth)_ — design in v7.
+3. **S9 suite** — the bulk of what the CoS does; design in v7, build in 6d.
+4. **SR-1 / D23** doc-sync mechanism + publish decision — before doc handoff.
+5. **F64 + F68 + F70 + D21/D24** — re-enable the descoped launchd jobs (fail-fast + env + `op`-auth).
+6. **F44 / Phase G OAuth** — kill the 7-day refresh-token weekly breakage.
+7. **S6** architecture-vs-live-schema reconcile — before authoring Andreas's config.
+8. **P6-49 → P6-48** — Andreas remit + ARCHITECTURE v7 (the 6c.10 deliverable).
+9. **F31 / S5 / D18** — container retention, DR dry-run, Python 3.13 — system-surface debt to retire as Andreas adds load. _(Plus the standing autonomous-payments F26 + payment-form-automation track, [P6-99]/[P6-117].)_
 
 _(Items already being cleared in 6c.9 — §A.1 — are omitted from this shortlist.)_
