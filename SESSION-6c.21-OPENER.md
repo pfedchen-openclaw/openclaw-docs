@@ -14,7 +14,7 @@ _Opener · generated at 6c.20 close (2026-07-04). 6c.20 shipped the **credential
 4. **④ Context-lever cost tuning pass (measure-then-tune, biggest open cost lever).** Apply ONE lever at a time with before/after measurement (calibrated Console rates, [P6-109]): `contextLimits.toolResultMaxChars` (caps browser-snapshot bloat — likely biggest), `params.cacheRetention:"long"`, `imageMaxDimensionPx`, `compaction.memoryFlush` tuning. Do NOT apply blind. Keeping Marie on Opus ([P6-106]) depends on this.
 
 ## Stage 2 — smaller carries
-- **Delete the 6c.20 throwaway 1P item** `agm4bg3fupvstogchryz75uwri` ("ZZ-TEST-cred-pipeline", Agent-Provisioned) — `Bash(op item delete:*)` is deny-listed for me; **Peter deletes it**, or authorises a one-off.
+- **Delete the 6c.20 throwaway 1P item** `agm4bg3fupvstogchryz75uwri` ("ZZ-TEST-cred-pipeline", Agent-Provisioned) — Peter deferred this to "the right time" (4-Jul); `Bash(op item delete:*)` is deny-listed for me, so **Peter deletes it** (1P app or `! op item delete …`). Harmless meanwhile (throwaway pw, `category:test`). Prompt him at 6c.21 open if still present.
 - **op-put username data-repair** — any 1P items mis-stored before the [P6-110] `$USERNAME` fix (Opera / Body4Life) hold `openclaw` instead of the email in the username field. `op item edit` is deny-listed → **Peter's call** to fix or re-create.
 - **MEMORY-size mechanical canary** — fold a `wc -c MEMORY.md > 5909` alert into the overnight-verify sweep so a regrowth is caught by a detective, not just the behavioural self-cap ([P6-115]).
 - **Battery re-run (judgement class)** — convert T3/T6/digest FAIL→PASS through the **real Telegram** path; cheapest model (Sonnet/Haiku, never Opus), ~$5 hard cap ([P6-51]).
