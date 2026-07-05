@@ -1,0 +1,39 @@
+# SESSION 6c.23 — Memory v2: measure the applied levers (canary before/after) + file restructure to the small frozen core + long-lived-session checkpoint
+
+_Opener · generated at 6c.22 close (2026-07-05). 6c.22 **applied the measured config pass** (7 schema-verified levers live; openclaw.json `da191cf1920d`→`d702ae330bb7`/10509B, A-7 clean, gateway restarted), **shipped the loss-free daily-file dedup** (pa 216→121 chunks, recall reconfirmed 0.590) and the **observability canary** (`scripts/memory-health.py` → `ai.openclaw.memory-health.plist`, daily 23:55, log-only), and **quantified the real disease**: three distinct context-loss modes — (1) 256 KB byte-cap prompt truncation on un-reset long-lived sessions (68% of turns; 93% in two sessions), (2) token-budget compaction on tool-heavy sessions, (3) `trajectory-event-size-limit` aborts when tool-heavy work runs on a big session. **Read [P6-119] (+ its UPDATE) first**, then `MEMORY-ARCHITECTURE-v2.md` §6. GUI/Screen-Sharing (D20) for any restart/browser/2FA._
+
+## Stage 0 — Ledger (no mutating work until GREEN)
+- **A-7:** live == last-good == **`d702ae330bb7`/10509B**, 600/staff. Pin 2026.4.22 (00bd2cf). Sandboxes `capable-2026-06`. (openclaw.json is **categorically Bash-deny-listed** to Claude Code — even structure-only `jq`. Config edits go via `scripts/apply-*.sh` run under explicit per-message permission, or Peter runs them. NEVER weaken the F21 backstop unilaterally.)
+- **Deviations currency:** **P6-1…119 gap-free**, no dangling refs (run the [P6-101] carry-chain check at close too). Pre-existing 21/22 dupes are historical — leave them.
+- **Context check first ([P6-117]):** confirm GUI vs SSH empirically (`SSH_CONNECTION` empty, `launchctl managername`=Aqua, `gui/502` reachable) before assuming.
+- **★ Config levers still live?** `config get agents.defaults.compaction.model` → `anthropic/claude-sonnet-4-6`; `keepRecentTokens`=40000; `contextInjection`=continuation-skip; `memorySearch.query.hybrid.mmr.enabled`/`temporalDecay.enabled`=true. Retrieval index: pa 34/34·**121**, pro 31/31·36, `Dirty: no` (survives restarts on disk).
+- **★ Canary running?** `launchctl print gui/502/ai.openclaw.memory-health` loaded; `state/memory-health/daily.log` accreting daily lines.
+
+## Stage 1 — the LEAD: measure the applied levers, then restructure (follow `MEMORY-ARCHITECTURE-v2.md` §6)
+The config is applied but **not yet behaviourally proven** (F26: live ≠ exercised). This session is measurement + the next structural steps.
+1. **Canary before/after (free, inspection).** Read `state/memory-health/daily.log` across the days since the config pass. Did median/p95 tokens fall? Did a **compaction fire on Sonnet** (`compaction.model` working — check `models` in a compacted turn)? Did truncation rate drop? Did `keepRecentTokens`/`truncateAfterCompaction` change behaviour? This is the F26 evidence the levers help (or not). Recalibrate the §8 thresholds off the real "after" numbers.
+2. **Fresh-session retrieval-usage re-test (the still-open gate signal).** 6c.22's smoke turn was **confounded** — `openclaw agent` continued the existing session that already held the context, so `memory_search` wasn't needed. Re-test in a **fresh session** (`openclaw agent --agent pa --session-id <new>` or a genuinely new Telegram thread) with a recall question whose answer is NOT in recent context. Does she call `memory_search`? If not → item 3 is the fix. Cheapest sufficient turn, browser-bounded, [P6-51].
+3. **File restructure to the small frozen core (workspace edits, live bind, no restart) — doc §6 step 5.** The fix for organic retrieval usage: slim `AGENTS.md`/`MEMORY.md` to core+index (≤~30 K), move procedural/episodic detail to retrieval-only so recall **requires** `memory_search`. Backup-first, reversible. This is the highest-value structural step and needs no restart.
+4. **Long-lived-session structured checkpoint (item 4) — the 93%-truncation + trajectory-abort source.** The un-reset `:telegram:direct` session (excluded from freshstart) is where 631/677 truncations live. Add periodic **structured** compaction/checkpoint (continuity-preserving, [P6-93]/[P6-95] — not a blunt wipe). Measure truncation-rate before/after via the canary.
+5. **Tool-result / media caps (config + restart, measured) — doc §6 step 2 / P3.** The browser/PDF bloat behind both compaction and the trajectory-size aborts. Set `imageMaxDimensionPx`, `pdfMaxPages`/`pdfMaxBytesMb`, `browser.snapshotDefaults.mode`, `tools.web.fetch.*` — each measured before/after (canary). **Do NOT lower `toolResultMaxChars` (already 16 K).** Same Peter-run-script + restart discipline as 6c.22.
+6. **Dreaming ON (cron) — only after** dedup (done) + reviewing the first `DREAMS.md`. `plugins.entries.memory-core.config.dreaming` (cheap model). Then the acceptance gate (§8) can start its week-long clock.
+
+_All Andreas-owned (`PRE-COS-BACKLOG` §A.4) — advance as far as Peter's presence + the restart windows allow; the canary makes each step measurable now._
+
+## Stage 2 — carried (secondary — do not let these crowd out Stage 1)
+- **Porsche re-deliver** (fresh, **browser-bounded** turn) — 6c.22's attempt aborted at the trajectory-size limit but surfaced the key correction: **windscreen = motor-insurance glass claim, NOT warranty** (Porsche Approved Warranty excludes glass); Mayfair centre ~2.5 mi closer than West London; car = Cayenne hybrid LY73 SKN. Surface this to Peter regardless — it changes his approach.
+- **Payments real-charge F26** (plain merchant, Marie gateway turn, Peter 2FA) — acceptance-gate blocker, [P6-99]/[P6-117]. Hard gateways stay drive-to-page + surface.
+- **Reply-watcher** — host poller on the agents' live Gmail cred (skip gog, [P6-109]) → `openclaw agent … --deliver`.
+- **generate-mode credential store** — round out [P6-115] (only `existing` proven live).
+- **Battery re-run** (judgement class T3/T6/digest) via the real Telegram path; cheapest model, ~$5 cap ([P6-51]).
+
+## Closed at 6c.22 (do not re-carry)
+Dedup DONE (loss-free, re-indexed); canary DONE (built+wired+baseline); measured config pass DONE (7 levers applied+restarted, A-12-corrected — `memoryFlush.model`/`cacheRetention` don't exist, real lever is `compaction.model`); churn quantified (three failure modes) — [P6-119].
+
+## Safety rails
+Reversible build runs without prompting (canary reads, dedup-with-backup, file restructure). **Surface irreversible/destructive:** openclaw.json changes + the **gateway restart** (via Peter-run script or explicit per-message permission — the F21 backstop is categorical, never route around), version-pin/D1, real charges, 1Password writes/deletes, depairing, reboots. **Cost ([P6-51]):** inspection/host-drive first; cheapest model; **browser-bound any smoke turn** (6c.22's turn ballooned into browser research and aborted at the size limit) + prefer fresh short sessions; no loops/Opus-batches; measure each lever, don't apply blind. **Secrets ([F21/F51]):** op host-only; display-immune checks; never read openclaw.json/agent-creds/** into context (Bash-blocked by design). GUI/Aqua for restart + browser + 2FA (D20).
+
+## Carry-forward
+- **Acceptance gate** stays OPEN — retrieval live + config applied + canary measuring; the week-long clock starts once the levers are proven helpful (§8) and dreaming is on.
+- **Pre-Andreas:** memory architecture is de-risked (retrieval live, dedup done, config applied, observability wired); the remainder is file restructure + session-checkpoint + measured media caps + the acceptance-gate clock (PRE-COS-BACKLOG §A.4). Then v7 capstone reconciliation ([P6-76]) → 6d Andreas.
+- **Andreas mandate:** first-principles review/refactor of faulty foundations (Peter, extends P6-49) — the memory saga is the exemplar; he inherits the full v2 plan + a working retrieval layer + a measuring canary.
