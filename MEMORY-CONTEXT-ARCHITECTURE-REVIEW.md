@@ -1,4 +1,7 @@
 # Memory / Context Architecture — Fundamental Review & Redesign Brief
+
+> **⚠ SUPERSEDED by `MEMORY-ARCHITECTURE-v2.md` (6c.21, [P6-118]).** This review's *diagnosis* stands (retrieval-over-injection, the feedback loop, the memory-type conflation), but 6c.21 corrected **two of its premises empirically:** (1) the retrieval layer is **not missing — OpenClaw ships it; it was switched off** (index 0/34) and is now turned ON; (2) its config-key names are wrong (real keys are under `agents.defaults.*`) and its "single biggest lever" `toolResultMaxChars` is **already 16 K** (not the churn driver). Read `MEMORY-ARCHITECTURE-v2.md` as the build spec; this doc is kept for provenance only.
+
 _Opened 2026-07-04 (6c.20→21) at Peter's direction: "we keep hitting memory / context / bloating / compaction / cost over the last ~10 sessions — it's at the crux of all failures AND high cost. Stop patching a fundamentally flawed system; review core principles + best practice (our KB + latest credible sources), refactor the build, come up with something that finally works." This doc is the **foundation for a dedicated session**; it is analysis + a design direction, not yet a committed build._
 
 ## 1. The pattern — one failure wearing many masks
