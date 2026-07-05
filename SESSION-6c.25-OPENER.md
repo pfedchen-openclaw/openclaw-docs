@@ -1,0 +1,40 @@
+# SESSION 6c.25 — Memory v2 interim (cont.): observe the reset net in production + media-caps after-window + doctor-hygiene hand-off; aggressive slice + dreaming remain ANDREAS-ONLY
+
+_Opener · generated at 6c.24 close (2026-07-05). 6c.24 **shipped the intra-day `:main`-bloat auto-reset net** ([P6-121]): the heartbeat-watchdog (already fires at 250K) now runs an archive-first `session-freshstart --force --agent <id>` on a `:main` per-turn (inputTokens) breach, **guarded to never restart the gateway under a live human chat**, per-agent 90-min cooldown, one reset/cycle — built, DRYRUN+fixture-verified end-to-end, and **live on the next 15-min tick** (no plist/restart/billed-turn). Also: media-caps after-window measured as **not yet open** and doctor orphan-detection **corrected** (naive match caught live sidecars) with a safe 41-file/206 MB manifest staged for Peter ([P6-122]). openclaw.json **UNCHANGED** (`eb08cfa7d7b6`/10654B). **Read [P6-121]+[P6-122] first**, then this. GUI/Screen-Sharing (D20) for any restart/browser/2FA._
+
+## Stage 0 — Ledger (no mutating work until GREEN)
+- **A-7:** live == last-good == **`eb08cfa7d7b6`/10654B**, 600/staff. Pin 2026.4.22 (00bd2cf). Sandboxes `capable-2026-06`. (openclaw.json is **categorically Bash-deny-listed** to Claude Code — A-7 verified via applied-lever `config get` values, never a direct file hash; config edits go via `scripts/apply-*.sh` under explicit per-message permission or Peter runs them. NEVER weaken the F21 backstop unilaterally.)
+- **Deviations currency:** **P6-1…122 gap-free**, no dangling refs (run the [P6-101] carry-chain check at close). Pre-existing 21/22 dupes are historical — leave them.
+- **Context check first ([P6-117]):** confirm GUI vs SSH empirically (`SSH_CONNECTION` empty, `gui/502` reachable) before assuming.
+- **★ Reset net live?** `scripts/heartbeat-watchdog.sh` = **`183896a33dd2`/20438B**, `scripts/session-freshstart.sh` = **`55020ef7acd6`/6637B**. The watchdog LaunchAgent re-reads the script each 900s tick (no bootstrap needed). Quick self-check: `WATCHDOG_DRYRUN=1 zsh scripts/heartbeat-watchdog.sh` against the real store → healthy `:main` emits no RESET (true-negative). Tunables: `WATCHDOG_RESET_TOKENS`=250000, `_RESET_COOLDOWN_MIN`=90, `_HUMAN_ACTIVE_MIN`=10.
+- **★ Media caps still live?** `config get browser.snapshotDefaults.mode`→`efficient`; `agents.defaults.imageMaxDimensionPx`=1024, `pdfMaxPages`=15, `pdfMaxBytesMb`=8. **toolResultMaxChars stays unset** (16K dist default — do NOT lower). 6c.22 levers live (`agents.defaults.compaction`: mode=safeguard, keepRecentTokens=40000, model=`anthropic/claude-sonnet-4-6`; `agents.defaults.memorySearch.query.hybrid` mmr+temporalDecay enabled).
+- **★ Index + canary:** `memory status` → pa **35/35·125**, pro **31/31·36**, `Dirty: no`, **Dreaming: off**, recall 12 · **0 promoted**. `launchctl print gui/502/ai.openclaw.memory-health` loaded; `state/memory-health/daily.log` accreting. Freshstart LIVE (06:55 daily) — don't "re-enable".
+
+## ⛔ FLAGGED FOR ANDREAS — do NOT attempt in interim sessions (Peter, 6c.23-followup)
+Unchanged from 6c.24. Both are quality-impacting substrate changes reserved for the CoS; **do not attempt even though reversible**:
+- **Aggressive frozen-core slice** (verb-tables + procedural blocks → retrieval-only, target ≤30K). With recall=0, moving hot content out is a regression risk until a **billed fresh-session turn** proves organic search. `PRE-COS-BACKLOG §A.4 item 3`.
+- **Dreaming ON** (nightly episodic→semantic promotion, opaque `phases`, no review-gate). `PRE-COS-BACKLOG §A.4 item 5`.
+- **The billed retrieval-usage verify turn** is coupled to the slice → also Andreas's.
+
+## Stage 1 — the LEAD: observe + hand off (safe interim work only)
+The reversible session-management gap is now closed; 6c.25 is mostly **observation + hand-off**, no new substrate build.
+1. **Reset-net production F26 (free, inspection) — the real proof [P6-121] works.** Once a genuine intra-day `:main` breach has occurred, confirm the self-heal fired correctly: `logs/heartbeat-watchdog.log` should show `reset trigger` → `session-freshstart --force --agent <id>` → `reset applied`, the `logs/heartbeat-watchdog.reset-<agent>.state` sentinel updated, and a Peter notify sent; the archive under `agents/<id>/sessions/archive/<date>/` should exist and `:main` be lean afterward. **If no breach has occurred yet** (media caps may keep `:main` under 250K — the good case), say so and keep watching. Do NOT synthesise a breach on the live gateway to force it.
+2. **Media-caps before/after ([P6-120] item-1, still open).** Read `state/memory-health/daily.log` across the days since 6c.23: once real browser/PDF turns have exercised `mode:efficient`, did median/p95/trunc fall? Recalibrate §8 off the real "after". (6c.24: after-window hadn't opened — same calendar day.)
+3. **Doctor-hygiene hand-off.** `state/doctor-orphan-manifest-6c24.txt` (41 files/206.5 MB, sidecar-safe) is staged — **surface to Peter to authorise/run** the guarded `rm` (deny-listed to Claude Code). Also disposition the extra `agents/` dirs (research/librarian/sdr/cos/leo/finance/main/travel — scaffolding vs stale = Peter's call).
+
+## Stage 2 — carried (secondary — do not let these crowd out Stage 1)
+- **Payments real-charge F26** (plain merchant, Marie gateway turn, Peter 2FA) — acceptance-gate blocker, [P6-99]/[P6-117]. Hard gateways stay drive-to-page + surface. Billed + irreversible → surface, never auto-execute.
+- **Reply-watcher** — host poller on the agents' live Gmail cred (skip gog, [P6-109]) → `openclaw agent … --deliver`. Design is host-side/reversible, but a real test needs a billed `--deliver` turn → scope it, get Peter's cost-OK before exercising (F26 = end-to-end, so don't ship untested).
+- **generate-mode credential store** — round out [P6-115] (only `existing` proven live).
+- **Battery re-run** (judgement class T3/T6/digest) via the real Telegram path; cheapest model, ~$5 cap ([P6-51]) — **billed, needs Peter's explicit OK.**
+
+## Closed at 6c.24 (do not re-carry)
+Intra-day `:main`-bloat durable fix = **DONE** ([P6-121], live on next tick); media-caps before/after = **measured (after-window not open — carried as a read, not a build)**; doctor orphan-detection = **corrected + safe manifest staged** ([P6-122]).
+
+## Safety rails
+Reversible interim observation/reads run without prompting. **The aggressive core-slice + dreaming stay ring-fenced to Andreas (Peter, 6c.23-followup) — do NOT attempt.** **Surface irreversible/destructive:** openclaw.json changes + gateway restart (Peter-run script or explicit per-message permission — F21 backstop categorical, never route around), version-pin/D1, real charges, 1Password writes/deletes, depairing, reboots, the `rm` of the orphan manifest (deny-listed → Peter), **and any billed turn (get Peter's cost-OK first, [P6-51])**. **Do NOT synthesise a live `:main` breach or fire a manual gateway restart to "test" the reset net** — wait for a real breach or verify by DRYRUN/inspection. **Secrets ([F21/F51]):** op host-only; display-immune checks; never read openclaw.json/agent-creds/** into context. GUI/Aqua for restart + browser + 2FA (D20).
+
+## Carry-forward
+- **Acceptance gate** stays OPEN. 6c.24 closed the last reversible session-management item (intra-day bounding). Remaining gate signals are Andreas-owned or billed: organic recall > 0 (aggressive slice + billed turn), media-caps before/after falling, dreaming-on + week-clock.
+- **Pre-Andreas:** memory architecture de-risked (retrieval live, dedup done, levers+caps applied, observability wired, conservative restructure shipped, **intra-day + overnight `:main` bounding both live**). Remainder = the aggressive slice + its verify turn + dreaming + the week-clock (`PRE-COS-BACKLOG §A.4`). Then v7 capstone reconciliation ([P6-76]) → 6d Andreas.
+- **Andreas mandate:** first-principles review/refactor of faulty foundations (Peter, extends P6-49) — inherits the full v2 plan + working retrieval + a measuring canary + a de-risked conservative baseline + the aggressive slice teed up + a self-healing (overnight + intra-day) `:main` reset net.
