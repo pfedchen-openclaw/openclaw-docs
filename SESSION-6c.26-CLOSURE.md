@@ -39,4 +39,5 @@ _Reply-watcher activation (Peter-gated) + 6-Jul health-review fixes + 0b F26 con
 - **Media-caps after-window** — read `daily.log` as 07-06+ `mode:efficient` rows accrue; recalibrate §8.
 - **Battery** — T3 (Marie/Opus) via Peter's Telegram or authorised; T1 reliability; T4/T5 capability/payment wall.
 - **Payment** — Wikimedia £10 donation on Peter's go (prepare-and-surface).
-- **⛔ ANDREAS-ONLY (do NOT attempt):** aggressive frozen-core slice + its billed verify turn; dreaming-on; week-clock; the `:telegram:direct` compaction bounding + brief-budget policy. Unchanged.
+- **★ v7 CAPSTONE / pre-6d consolidation ([P6-76]/[P6-127]) — OVERDUE, the milestone gate before Andreas (NOT an Andreas task).** Author ARCHITECTURE v6→v7 + reconcile STATE-OF-NATION/RUNBOOK/ARCHITECTURE from the Phase-6 deltas + S11/S6/[P6-49]/SR-1·D23 + judgement doctrine + capability decisions + correspondence-freeze + fresh 6d opener. Canonical snapshots stale since **2026-06-11**; v7 never authored. Sequence: **acceptance gate → v7 capstone → 6d Andreas.** Peter to prioritise timing (milestone-scale, not self-started).
+- **⛔ ANDREAS-ONLY (do NOT attempt) — Andreas's BUILD mandate, informed by the v7 spec:** aggressive frozen-core slice + its billed verify turn; dreaming-on; week-clock; the `:telegram:direct` compaction bounding + brief-budget policy. Unchanged.
