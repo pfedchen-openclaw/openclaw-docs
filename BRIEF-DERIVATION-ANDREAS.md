@@ -18,7 +18,7 @@ _Design artifact. Derives DRAFT `AGENTS.md` / `TOOLS.md` / `HEARTBEAT.md` for th
 
 **Model / persona inversion.** First **male** agent (German/Swiss per the avatar template + architecture §2.2 naming direction), **Opus-leaning** by default (reputation/judgement weight — architecture: "Opus for CoS"), whereas Marie/Charlotte run Sonnet with Opus-for-VIP. The exact pin is a Peter call (surfaced) — `opus-4-7` is the Opus on the current 2026.4.22 build.
 
-**What I deliberately did NOT invent.** The S11 loop-protection *numbers* (message budgets, cycle depth, TTL, kill-switch trigger) were undesigned when this draft was written; they are now **designed in `MASTER-ARCHITECTURE-v7.md` PART 9 §S11** (6c.31) with proposed starting defaults (hop-cap 4, per-conversation 8, per-pair 2, fan-out 2, ~30/day) that remain **surfaced-for-tuning** once Andreas's real orchestration is observed. I reference them as HARD constraints Andreas operates under rather than fabricating final thresholds. The control-plane tool grants (`sessions_send`, `cron`, and the denied `gateway`/`sessions_spawn`) are surfaced as trust decisions, defaulted to least-privilege, not silently granted. The agent id, the exact heartbeat cadence, and the Gmail read-scope are likewise surfaced rather than assumed.
+**What I deliberately did NOT invent.** The S11 loop-protection *numbers* (message budgets, cycle depth, TTL, kill-switch trigger) were undesigned when this draft was written; they are now **designed in `MASTER-ARCHITECTURE-v7.md` PART 9 §S11** (6c.31) with proposed starting defaults (hop-cap 4, per-conversation 8, per-pair 2, fan-out 2, ~30/day) that remain **surfaced-for-tuning** once Andreas's real orchestration is observed. I reference them as HARD constraints Andreas operates under rather than fabricating final thresholds. The control-plane tool grants were surfaced as trust decisions and RESOLVED by Peter at 6c.31 (see §(d)): `sessions_send`+`cron`+hard-gated `sessions_spawn` granted, `gateway` denied — none silently granted. The agent id, the exact heartbeat cadence, and the Gmail read-scope are likewise surfaced rather than assumed.
 
 ---
 
@@ -127,7 +127,8 @@ _Local setup + tool permissions. Skills define how tools work; this holds Andrea
 - `openclaw message send` (gateway-bot primitive, **not** a billed turn) — free heads-up delivery to Peter and the free path for the rate-limit-governor alert; preferred over a billed A2A turn wherever a turn isn't needed.
 
 **Denied / not held (least-privilege — the default; anything moved to Allowed is a Peter decision)**
-- `gateway`, `sessions_spawn` — **global deny, not lifted for CoS.** Spawning/administering sessions and gateway control are the highest-blast-radius control-plane verbs; a fan-out + self-modifying agent must not hold them. Orchestration is done via `sessions_send` + gated `openclaw agent … --deliver`, never by spawning or gateway control. (SURFACED DECISION — least-privilege default.)
+- `sessions_spawn` — **GRANTED (Peter, 6c.31), but HARD-GATED.** May spawn sessions only under a **hard per-window spawn budget + the S11 caps** — never an uncapped loop. Orchestration still prefers `sessions_send` + the gated `openclaw agent … --deliver`; spawning is reserved for genuine budget-bounded parallel sub-work. The per-window spawn budget must be enforced in code alongside S11 before it goes live.
+- `gateway` — **global deny, NOT lifted for CoS** (Peter, 6c.31). Gateway control is the highest-blast-radius verb; a fan-out + self-modifying agent must not hold it.
 - **Any mailbox mutation.** No `gmail.modify` on either mailbox. `pfedchen@gmail.com` is Marie's; `peter.fedchenkov@soveren.io` is Charlotte's. I never triage/label/archive/draft/send in either.
 - **Work-inbox read scan** — a *read-only* briefing scan of Peter's work inbox (architecture §AGENT-3) is **authored but OFF** until Peter grants the scope; even then it is read-only, never mutation. (SURFACED DECISION.)
 - **Calendar / Drive / Docs / Sheets write** — none in v1. My Google access is read-only for briefing assembly. (SURFACED DECISION — grant a scoped write only if the costs tracker / doc-currency work genuinely needs it.)
@@ -222,7 +223,7 @@ _Cadence/escalation detail: AGENTS.md. On Opus the cheapest correct beat is a no
 | **§What I never do** | *Domain* firewall (personal vs work) | ***Altitude* firewall** — orchestrates, never reaches into object-level work | Inverted (in shape) | Prevents the meta agent from doing the specialists' jobs or self-executing infra. |
 | **§Stewardship** (doc-currency, per-task costs tracker, digest assembly, infra-currency) | Only *pointers* ("CoS owns … from 6d") | **His actual, drafted remit** | Net-new | P6-48/49 + backlog §C; no Marie/Charlotte analogue. |
 | **§Close-discipline (SR-1 doc-autopilot)** | None | **Full section** — additive log, closure+opener, SHA-anchor, carry-chain [P6-101] audit, milestone re-fold, repo commit | Net-new | Directly from CLAUDE.md's session-lifecycle; becomes his job. |
-| **Control-plane tools** | `sessions_send`+`cron` (Marie); deny `gateway`/`sessions_spawn` | `sessions_send`+`cron` **primary**; `gateway`/`sessions_spawn` **still denied**; billed-turn cost surface named | Adapted + SURFACED | Least-privilege default; the grants are trust *and* cost decisions (each hop billed). |
+| **Control-plane tools** | `sessions_send`+`cron` (Marie); deny `gateway`/`sessions_spawn` | `sessions_send`+`cron`+**`sessions_spawn`** granted (spawn HARD-gated by a per-window budget + S11 caps); `gateway` **denied**; billed-turn cost surface named | **RESOLVED (Peter, 6c.31)** | Add-sessions_spawn chosen; each A2A hop billed → the ~30/day S11 envelope applies. |
 | **Google/mail scope** | Full `gmail.modify` on their mailbox + read/write Google | **Read-only briefing inputs; no mailbox mutation; no write in v1** | Inverted (narrowed) | He needs inputs to assemble, not authority to act in anyone's account. |
 | **Payments** | Marie: capped-card prepare-and-surface | **None — no card** | Narrowed | He coordinates the owning agent; never actuates a spend. |
 | **HEARTBEAT — briefing** | Marie owns 08:00 digest (her mailbox) | **08:00 = cron-assembled from ALL agents' digests** | Adapted | Reliability + the cross-agent assembly role. |
@@ -234,13 +235,21 @@ _Cadence/escalation detail: AGENTS.md. On Opus the cheapest correct beat is a no
 
 These are the trust / scope / cost choices the drafts flag rather than silently resolve. Each carries my least-privilege default + the rationale; the build should not proceed on any of them without Peter's call.
 
+> **★ RESOLVED at 6c.31 close (Peter, via AskUserQuestion + confirmed defaults) — 6d builds from these:**
+> - **#3 `gateway`** → **DENIED** (confirmed). **#4 `sessions_spawn`** → **GRANTED but HARD-GATED** — allowed only under a per-window spawn budget + the S11 caps enforced in code ("Add sessions_spawn"). **#5 `sessions_send`** → **GRANTED** (primary; live only once S11 caps exist). **#6 `cron`** → **GRANTED**, propose/assemble-only.
+> - **#7 A2A cost envelope + #9 S11 thresholds** → **adopt the v7 §S11 proposed defaults** (hop 4 / per-conv 8 / per-pair 2 / fan-out 2 / ~30 billed A2A turns/day), tunable once real orchestration is observed; **S11 (and the spawn budget) MUST be built before A2A goes live.**
+> - **#10 work-inbox** → **DIGEST-ONLY** — Andreas assembles from Charlotte's digest; NO direct mailbox grant (cleanest firewall).
+> - **#12 engineering-steward** → **Andreas's facet** (do not proliferate agents).
+> - **Confirmed least-privilege defaults (Peter did not override):** **#1** id `cos`; **#2** model `opus-4-7` (Sonnet-for-routine fallback a 6d tuning detail); **#8** conservative cadence (few lightweight beats + the 08:00 cron briefing); **#11** Google **read-only** in v1; **#13** publish target = the `openclaw-docs` repo, commit+push at close (today's flow).
+> The per-decision detail below is retained as the rationale record; where it still reads "surfaced/undecided", the block above is authoritative.
+
 1. **Agent id `cos` vs a name-based id.** *Default:* `cos` (role-based, continues `pa`/`pro`; architecture uses `accountId: "cos"`). *Decision:* confirm `cos`, or prefer `andreas`. Low-stakes but it's baked into config/creds paths, so lock it first.
 
 2. **Exact Opus model pin.** *Default:* `opus-4-7` (the Opus on the pinned 2026.4.22 build). *Decision:* Peter's call on the exact pin and on whether the Sonnet-for-routine fallback is enabled from day one. This is a cost lever (Opus beats are expensive), so pairs with #7/#8.
 
 3. **`gateway` — stays globally DENIED.** *Default (mine):* deny. Gateway control is the highest-blast-radius verb; a fan-out + self-modifying agent must not hold it. *Decision:* confirm it stays denied (I recommend yes).
 
-4. **`sessions_spawn` — stays globally DENIED.** *Default:* deny. Spawning sessions from a fan-out agent is an uncapped-loop and cost risk; orchestration works via `sessions_send` + gated `openclaw agent … --deliver`. *Decision:* confirm denied (recommend yes). **If ever granted, it must be inside the S11 caps + a hard per-window spawn budget.**
+4. **`sessions_spawn`.** *Default (mine was):* deny — spawning from a fan-out agent is an uncapped-loop/cost risk. **RESOLVED (Peter, 6c.31): GRANTED but HARD-GATED** — allowed only inside the S11 caps **+ a hard per-window spawn budget enforced in code**, which must exist before it goes live. Orchestration still prefers `sessions_send` + the gated `openclaw agent … --deliver`; spawning is for genuine budget-bounded parallel sub-work only.
 
 5. **`sessions_send` — GRANT (primary).** *Default:* grant; it's his core coordination verb. *Decision:* confirm grant **and** confirm the S11 caps that bound it exist before he goes live (see #9) — the tool without the caps is the highest-risk gap.
 
@@ -250,7 +259,7 @@ These are the trust / scope / cost choices the drafts flag rather than silently 
 
 8. **Heartbeat cadence on Opus.** *Default:* conservative — a few lightweight beats/day + the 08:00 cron briefing; no fixed hourly cadence (the architecture's "hourly 7am–11pm" predates the [P6-85] cost-hardening that moved Marie to 2h). *Decision:* set the exact cadence; on Opus a tighter cadence burns budget for little signal.
 
-9. **S11 thresholds (message budgets, cycle/TTL depth, kill-switch trigger, counter location).** **Undesigned — the highest-risk gap; belongs to the v7 capstone.** *Default:* none fabricated; the drafts reference the caps as a HARD constraint and defer the numbers. *Decision (dependency):* S11 must be *designed* before Andreas goes live fan-out-capable. Andreas cannot be trusted with `sessions_send` at scale until this lands.
+9. **S11 thresholds (message budgets, cycle/TTL depth, kill-switch trigger, counter location).** **DESIGNED at 6c.31 — `MASTER-ARCHITECTURE-v7.md` PART 9 §S11.** *Default (proposed, tunable):* hop-cap 4, per-conversation 8, per-ordered-pair 2, fan-out 2, ~30 billed A2A turns/day; host-mailbox routing; kill-switch sentinel + cost circuit-breaker. *Decision:* confirm the proposed numbers or tune them, AND confirm the constraint that **S11 must be BUILT before Andreas's `sessions_send`/A2A goes live** (the design exists; the build is 6d). Andreas cannot run fan-out-capable until the caps are enforced in code.
 
 10. **Read-only work-inbox briefing scan.** Architecture gives CoS a read-only scan of Peter's work inbox for briefing freshness. *Default:* **authored but OFF** — no mailbox grant until Peter approves; even then read-only, never mutation, never overlapping Charlotte's triage. *Decision:* grant the read scope, or have Andreas assemble purely from Charlotte's digest (no direct inbox touch — the cleaner firewall). I lean **digest-only** unless freshness genuinely needs the live scan.
 
