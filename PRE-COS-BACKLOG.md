@@ -12,6 +12,34 @@ Tag legend: **[MUST]** before 6d · **[NICE]** opportunistic/cheap · **[DEFER]*
 
 ---
 
+## ★ 6c.31 MILESTONE RECONCILIATION (v7-capstone boundary — [P6-101] re-fold)
+_Additive overlay. The §A–§E lenses below are the 6c.9 record (preserved). This block reconciles their status to 6c.31 close and folds the still-open set forward into a single 6d-ready list. The v7 capstone landed this session, so all the "gate is 6c.10 / author-v7" items are now **CLEARED**._
+
+**CLEARED at 6c.31 (were §A gating blockers):**
+- **P6-48 — ARCHITECTURE v7 authored** ✔ (`MASTER-ARCHITECTURE-v7.md`, supersedes v6 additively, all Phase-6 subsystems P6-anchored).
+- **S11 — inter-agent loop-protection DESIGNED** ✔ (v7 PART 9 §S11 — 5-layer envelope/budgets/circuit-breaker/kill-switch/observability; numeric budgets surfaced as tunable defaults). Build = 6d, before A2A is enabled.
+- **SR-1 / D23 — doc-autopilot DESIGNED** ✔ (v7 PART 10 — scripted-audit vs judgement split; commit-at-close, push surfaced). Publish-target decision folded to 6d.
+- **P6-49 — Andreas engineering-steward remit formalised** ✔ (v7 PART 11 + `BRIEF-DERIVATION-ANDREAS.md`).
+- **P6-26 — Sophie + Andreas briefs DERIVED from the CURRENT Marie/Charlotte pair** ✔ (`BRIEF-DERIVATION-SOPHIE.md` / `BRIEF-DERIVATION-ANDREAS.md`). Discharge-at-build, rule honoured.
+- **S6 — schema-vs-live reconcile** — PARTIAL: v7 records the known 2026.4.22 obsolescence (no `params.cacheRetention`, no `compaction.timeout` key, `snapshotDefaults.mode` binary-not-enum, per-agent `contextTokens` absent) and does NOT re-embed a stale config template. Residual full-sweep → 6d before authoring Andreas's config.
+- **Memory/Context Architecture v2 (§A.4 headline)** — SHIPPED + gate **PASS** (recalibrated, [P6-137]); retrieval LIVE, canary LIVE, media caps + compaction levers applied. The **aggressive frozen-core slice + dreaming-on** remainder stays Andreas-only.
+- **Acceptance/usefulness gate — PASS on all agent-quality dimensions** (6c.30). Sole residual = the transactional last-mile (CAPTCHA + hosted-field), Andreas infrastructure.
+- **§A.1 (6c.9) items** — comms/chat-hygiene (P6-50/27/30), reliability carries (P6-57), watchdog sawtooth commit (P6-59) — all long since cleared.
+
+**STILL-OPEN → folded to 6d (the Andreas-ready set; = v7 PART 11 + the opener ⛔ list):**
+1. **Transactional last-mile** — CAPTCHA-solver (P6-39) + hosted-field cross-origin card-fill (P6-135, `pay-fill.sh` multi-target) + **the `pay-fill.sh` PATH bug** (verify+fix before payment work).
+2. **Browser backend gap** — Playwright-launched-Chromium swap for `refs=aria`/`efficient`; per-site recipes (P6-44); `browser-dep-repair.sh` post-update guardrail (P6-40/42); benign `browser`-unavailable validation warning (P6-132).
+3. **Hard code-level gates** — pulse send-gate (P6-128) + marie@ approval-token stop (soft brief rules = coping-not-cure).
+4. **Robust outbound-bounce/DSN sweep** — extend reply-watcher (P6-138; HEARTBEAT rule = interim).
+5. **Bloat/stick CURE** — aggressive frozen-core slice (verb-tables→retrieval, ≤30K) + dreaming-on + `:telegram:direct` compaction bounding (`CHAT_RESET_TOKENS`→~70000; `compaction.model`/`keepRecentTokens`); needs a billed fresh-session verify. chat-bloat-reset = proven backstop.
+6. **Prereqs (§A.3, unchanged):** F2/F26 Andreas pairing; re-enable descoped launchd jobs (F64/F68/F70/D21-D24); F44 OAuth Internal-flip; F59 `GOG_KEYRING_PASSWORD` rotation; P6-45 payment-layer guardrail as a design constraint.
+7. **S9 monitoring suite + P6-85 per-task cost tracker + the foundational-refactor mandate** (§C — Andreas's object-level job).
+8. **Standing constraints (§B)** — inherit verbatim into Andreas's guardrails (secrets/config-hygiene/sandbox/launchd/posture invariants).
+9. **Milestone hygiene (§D/§E)** — maintenance cadences; DR dry-run (S5); container retention (F31); Python 3.13 (D18); OAuth org-ownership (P6-90); the daily context-wipe experiment (P6-95); Charlotte/Andreas/Sophie avatars.
+- **Optional reversible follow-ups (Peter-run, non-blocking):** `CHAT_RESET_TOKENS`→~70000; periodic reindex job; clean the orphan 1Password item `efrhqyifslubmapond7wb6mmee`; MEMORY.md RATIONALE-rotation.
+
+---
+
 ## §A — Gating items (real blockers; do/decide before the named gate)
 
 ### A.1 — Clearing in THIS session (6c.9)

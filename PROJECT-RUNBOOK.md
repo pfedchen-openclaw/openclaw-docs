@@ -1,7 +1,7 @@
 # OpenClaw — Project Runbook
 
-**Last updated:** 2026-06-02 (Session 6a.34)
-**Phase:** 0 (Infrastructure)
+**Last updated:** 2026-07-09 (Session 6c.31 — v7 capstone reconciliation)
+**Phase:** 6c (hardening Marie + Charlotte toward the v7 capstone; before Andreas/6d)
 **Audience:** Operator with a specific problem to solve right now. Assumes you've read PROJECT-STATE-OF-NATION.md at least once, or are willing to cross-reference it.
 
 > **Document set.** This is one of two companion documents.
@@ -18,9 +18,9 @@ Reach for this document when something needs doing or fixing: a credential needs
 
 ### The cardinal rule
 
-When in doubt: **read-only investigation only; surface findings; wait for direction.** Every state-changing operation in this document has a "pause first" character. The system is mid-build (Phase 0) and most of its value is latent — the cost of a wrong write is high, the cost of waiting is low. §2.8 is the explicit autonomous-vs-escalate boundary; when unsure, treat the situation as escalate.
+When in doubt: **read-only investigation only; surface findings; wait for direction.** Every state-changing operation in this document has a "pause first" character. The system is mid-build (Phase 6c) and most of its value is latent — the cost of a wrong write is high, the cost of waiting is low. §2.8 is the explicit autonomous-vs-escalate boundary; when unsure, treat the situation as escalate.
 
-`F#` / `D#` / `S#` / `M#` references point at rows in `DEVIATIONS-LOG.md`. Context is summarised inline; the log has full history.
+`F#` / `D#` / `S#` / `M#` and `P6-N` references point at rows in the deviations logs. The **live** log is `PHASE-6-DEVIATIONS-LOG.md` — P6-N codes, and any new F#/D#/S# findings raised during Phase 6 now sit alongside them there (additive-only). The original `DEVIATIONS-LOG.md` is **frozen** at Phase-0 and holds the D/F/S/M rows this document cites by number. Context is summarised inline; the logs have full history.
 
 ## 1. Credentials, secrets, and rotation
 
@@ -56,7 +56,7 @@ The 1Password layer sits above all three: every credential should have a corresp
 | Google keyring password | `~/.openclaw/credentials/gog-keyring-password` (45 bytes) + env var `GOG_KEYRING_PASSWORD` (44 chars) | Unlocks stored Google refresh tokens | Annual or with client-secret rotation |
 | Calendar refresh token | `~/.openclaw/credentials/calendar-backup-token.json` (746 bytes) | Calendar backup pipeline | 7-day TTL (External/Testing OAuth app); refresh procedure in §2.3 |
 
-**F44 current state (CLOSED-AS-DESCOPED, D24).** The calendar-backup launchd job is descoped — its plist is parked at `ai.openclaw.calendar-backup.plist.disabled-D24` and is not loaded (verified: `Could not find service … gui:502`, durable through reboot). With no caller, the token's 7-day TTL is moot; F44 does not bite while the job is descoped. It resurfaces only when calendar-backup is re-enabled (targeted ~2026-07-23±, at Phase G / 6b+) — and re-enable has a hard precondition: the SR-2 manual ICS export (see §2.12 and the session opener). The Production-OAuth move that removes the 7-day TTL is part of that re-enable, not a near-term step.
+**F44 current state (CLOSED-AS-DESCOPED, D24).** The calendar-backup launchd job is descoped — its plist is parked at `ai.openclaw.calendar-backup.plist.disabled-D24` and is not loaded (verified: `Could not find service … gui:502`, durable through reboot). With no caller, the token's 7-day TTL is moot; F44 does not bite while the job is descoped. It resurfaces only when calendar-backup is re-enabled (targeted ~2026-07-23±, at Phase G / 6b+ — **date/status unverified at 6c.31; confirm at 6d**) — and re-enable has a hard precondition: the SR-2 manual ICS export (see §2.12 and the session opener). The Production-OAuth move (the OAuth app Internal/Production flip that removes the 7-day TTL) is part of that re-enable, not a near-term step — **verify at 6d**.
 
 ### 1.4 Rotation procedure (general pattern)
 
@@ -122,6 +122,15 @@ Hard rules — violations are immediate stop-and-rollback events:
 | Config repo stale after an `openclaw.json` change | re-run the sanitiser + commit + push | §2.11 |
 | Re-enabling a descoped job (calendar-backup / security-audit) | rename `.disabled-D24` → `.plist`, then bootstrap (GUI) | §2.12 |
 | Browser tool fails "Playwright is not available …" (esp. after `openclaw update`) | `ls -l …/openclaw/node_modules/playwright-core` (P6-40 symlink) | §2.13 |
+| Sandboxes/containers down; "Cannot connect to the Docker daemon" | `colima status` + colima-socket-watchdog log | §2.15 |
+| No heartbeat / beats stalled / multi-hour sawtooth gaps | `openclaw system heartbeat status`; watchdog log | §2.14, §2.15 |
+| Beats firing overnight (should be quiet 23:00–07:00) | `ls ~/.openclaw/logs/heartbeat.night`; nightwindow log | §2.15 |
+| Marie goes quiet / stuck after a long chat; a `:main` ballooned | chat-bloat-reset / session-freshstart logs | §2.15 |
+| Daily spend/cost note not arriving, or a spend spike | `cost-notify` logs (Console is authoritative) | §2.15 |
+| memory-health canary alarm, or memory metrics regressed | `tail ~/.openclaw/state/memory-health/daily.log` | §2.15 |
+| Awaited Gmail reply not surfaced | `tail ~/.openclaw/logs/reply-watcher.log` | §2.15 |
+| Agent credential-save request stuck in a queue | `ls ~/.openclaw/workspace-*/.cred-queue/pending` | §2.15 |
+| Need to fill a generated password / card into a live form | host-only autofill CLIs (agent paused) | §2.16 |
 | Something feels off but no clear symptom | Run the catch-all health check | §2.7 |
 
 ### 2.1 Gateway restoration (F45 ceremony)
@@ -251,7 +260,9 @@ As of 6a.34, 4 Telegram bots are configured under `channels.telegram.accounts` (
 
 ### 2.7 Config drift + general health check (catch-all)
 
-**Config drift.** If a config file's sha12 differs from the anchor recorded in DEVIATIONS-LOG.md: do not assume corruption — it could be a legitimate edit from a prior session. Compare contents (`diff` against the 1Password-backed reference, or against the prior session's archived copy), establish whether the change is intentional, *before* any recovery action. Only restore-from-1Password if the change is confirmed unintended.
+**Config drift.** If a config file's sha12 differs from the anchor recorded in the deviations log: do not assume corruption — it could be a legitimate edit from a prior session. Compare contents (`diff` against the 1Password-backed reference, or against the prior session's archived copy), establish whether the change is intentional, *before* any recovery action. Only restore-from-1Password if the change is confirmed unintended. **Current live `openclaw.json` anchor (6c.31):** sha12 `3267edd8b6aa`, 10489 bytes, mode 0600, A-7 clean (pin 2026.4.22).
+
+**`openclaw.json` editing discipline (F17).** Never edit `openclaw.json` in place. Stage a full `openclaw.json.new` in the **same directory**, then atomic rename-only `mv` (same-dir — never from `/tmp`), always paired with `chmod 600 && chgrp staff` in the same block; keep `openclaw.json.last-good` byte-identical after a clean apply (A-7). Note the ops-tooling guard: `jq` / `mv` / `cp` targeting `openclaw.json` are **Bash-deny-listed** in this Claude-Code harness, so config edits are prepared as a staged diff and **surfaced for Peter to apply** (or applied by an explicitly-authorised script) — never routed around the deny-list. Any change to `agents.defaults.sandbox` must be mirrored into the per-agent `pa`/`pro` sandbox blocks (P6-24). After any live `openclaw.json` change, refresh the sanitised snapshot (§2.11).
 
 **General health sweep.** When nothing is obviously broken but something feels off, run the read-only sweep:
 
@@ -307,7 +318,7 @@ Expect: top-level `state = not running` (idle between fires), `last exit code = 
 A periodic encrypted export of the OpenClaw 1Password vault, kept on-Mini as a belt-and-braces copy.
 
 - **What it is:** `~/.openclaw/scripts/op-backup.sh` produces an **OpenSSL AES-256-CBC** blob (PBKDF2 key derivation, salted); the latest is symlinked at `~/.openclaw/backups/onepassword-vault-latest.enc` → `onepassword-vault-YYYY-MM-DD-HHMMSS.enc` (mode 0600). The decryption passphrase lives at `~/.openclaw/credentials/op-backup-passphrase` (mode 0600, ≥20 B) and is stored **three ways** (on-Mini file + 1Password + offline) so loss of any one path is survivable.
-- **Status:** run **interactively** for now. The unattended/launchd version needs a 1Password Service Account — a Teams/Business paid-tier feature (~$19.95/mo floor), not a $5 add-on — so it is deferred (F70). It does not run on a timer; run it by hand at meaningful checkpoints.
+- **Status:** run **interactively** at meaningful checkpoints. The F70 blocker (no unattended `op` auth under launchd) is now **resolved** — a 1Password **service account** exists and the `op-get`/`op-put` wrappers (§2.16) use it — so an unattended op-backup is now mechanically possible. But **no `ai.openclaw.op-backup` timer exists in the fleet as of 6c.31**: whether to schedule it (vs. keep it a deliberate manual checkpoint) is a **6d decision — verify/decide at 6d**, don't assume it's automated. It does not currently run on a timer.
 - **Run by hand:** from a shell with an authed `op` session (`op whoami` first), execute `op-backup.sh`. It reads the passphrase file and writes a fresh dated `.enc` + repoints the symlink.
 - **Verify** (F59 — never read the passphrase or the blob contents; structure only):
 
@@ -390,7 +401,56 @@ While the sentinel exists, the `heartbeat-watchdog.sh` PAUSE guard (added P6-77)
 2. `openclaw system heartbeat enable`.
 3. **Verify:** a real beat fires (`[heartbeat]` in gateway.log within one interval).
 
-The watchdog PAUSE guard is a **temporary** P6-77 patch; when the WS-8 alerting redesign lands (6c.11), fold/replace it rather than leaving two mechanisms. This is a runtime pause — the config-level heartbeat/fallback redesign is separate.
+The watchdog PAUSE guard began as a **temporary** P6-77 patch; the WS-8/9 alerting redesign has since **landed** (6c.11, [P6-71]/[P6-73]) and the guard is folded into `heartbeat-watchdog.sh` alongside it (episode-throttled fallback/blocker/cost alerting) — see §2.15. This is a runtime pause; the config-level heartbeat/fallback redesign is separate (verify final shape at 6d).
+
+### 2.15 LaunchAgent fleet — full inventory + per-job operations
+
+The fleet grew from 2 active jobs (6a.34) to **11 live** `ai.openclaw.*` jobs (6c.31) plus the 2 descoped `.disabled-D24` plists. All are user-domain `gui/502` LaunchAgents — every bootstrap/bootout is GUI-session-bound (D20 — over SSH they exit 125; use Screen Sharing). For every job the A-1 rule holds: **verify what it DID, not just that it loaded** (F69 `head -3`, never `head -1`).
+
+| Job (`ai.openclaw.*`) | Trigger | What it does | Script | § |
+|---|---|---|---|---|
+| `gateway` | KeepAlive + RunAtLoad | gateway supervisor | (built-in) | §2.1 |
+| `colima` | RunAtLoad, **KeepAlive=false** | starts the Colima container runtime at login | `colima start` | §2.15 |
+| `colima-socket-watchdog` | every 5m | probes docker socket; restarts Colima on a wedged socket | `colima-socket-watchdog.sh` | §2.15 |
+| `heartbeat-watchdog` | every 15m | beat-stall restart + WS-8 alerting + intra-day `:main` reset net | `heartbeat-watchdog.sh` | §2.14/§2.15 |
+| `heartbeat-nightwindow` | 23:00 + 07:00 | suppress/restore overnight beats | `heartbeat-nightwindow.sh` | §2.15 |
+| `session-freshstart` | 06:55 daily | archive+clear `:main` for a lean morning session | `session-freshstart.sh` | §2.15 |
+| `chat-bloat-reset` | every 15m | self-heal Marie's `:telegram:direct` chat when bloated+idle | `chat-bloat-reset.sh` | §2.15 |
+| `memory-health` | 23:55 daily + RunAtLoad | Memory-v2 acceptance-gate canary | `memory-health.py` | §2.15 |
+| `cost-notify` | every 3m | per-task token+$ push; daily total from Console | `cost-notify.py` | §2.15 |
+| `reply-watcher` | every 15m | bounded Gmail poll → surface awaited replies (dryrun default) | `reply-watcher.sh` | §2.15 |
+| `cred-save-watch` | every 45s | drain the per-agent credential-save queues | `cred-save-drain.sh` | §2.15 |
+| `vault-backup` | 04:00 daily | Obsidian → Google Drive backup | `vault-backup.sh` | §2.9 |
+| `calendar-backup.plist.disabled-D24` | descoped | not loaded | — | §2.12 |
+| `security-audit.plist.disabled-D24` | descoped | not loaded | — | §2.12 |
+
+**colima + colima-socket-watchdog (P6-57).** `ai.openclaw.colima` (`colima start`, RunAtLoad, **KeepAlive=false**) brings the container runtime up at login — this **SUPERSEDES** any "manually `colima start` after a reboot" guidance; a warm reboot autostarts it (cold-boot still halts at FileVault, §2.1). Because KeepAlive is false, a dead/wedged colima does **not** self-heal — that gap is closed by `colima-socket-watchdog` (every 5m): it probes the real docker control-plane (`docker info` over the Colima socket) and only on **two** failed probes (transient-blip reject) past a 15m cooldown restarts Colima and Telegrams Peter. Verify: `tail ~/.openclaw/logs/colima-socket-watchdog.log` → `ok docker socket reachable`. Run by hand: `bash ~/.openclaw/scripts/colima-socket-watchdog.sh` (idempotent). Recover by hand: `colima status; colima restart` (or `colima start` if stopped) — the gateway (KeepAlive) brings the sandboxed agents back with it. **Do not** flip colima's KeepAlive to true — it fights a deliberate stop and can't catch a wedged-but-alive socket (the reason the probe watchdog exists).
+
+**heartbeat-watchdog (P6-47 / WS-8/9).** Every 15m. Ensures today's per-agent memory file exists (stops the 07:27 read ENOENT), detects a stalled beat loop and restarts the gateway to recover it (cooldown-guarded so it can't restart-loop), runs the **WS-8 consolidated alerting** (fallback episodes / hard blockers e.g. dead OAuth / cost-context bloat → escalated to Peter via Marie's working channel), and carries the **[P6-121] intra-day `:main` auto-reset net** (a single heavy browser turn can balloon `:main` past ~250K inputTokens → it force-runs `session-freshstart --force --agent <id>`). Liveness is anchored on the **actual** last beat (`heartbeat last`), not a proxy. **[P6-59] cautionary tale:** an earlier watchdog keyed off a proxy signal that only the watchdog itself moved, so a *broken* watchdog silently starved `pro`'s beat ~20h (a sawtooth dead-zone) — the standing rule is watch the real per-event signal. Honours the pause/night sentinels (§2.14). Verify: `tail ~/.openclaw/logs/heartbeat-watchdog.log`. Dry-run by hand: `WATCHDOG_DRYRUN=1 bash ~/.openclaw/scripts/heartbeat-watchdog.sh` (prints intended sends/restarts/resets; acts on nothing).
+
+**heartbeat-nightwindow ([P6-85]).** Fires 23:00 (suppress) and 07:00 (restore). OpenClaw has no native quiet-hours knob and a beat costs even when silent, so this disables beats overnight — it drops a `logs/heartbeat.night` sentinel the watchdog treats like a pause (so the long gap isn't read as a stall) — and re-enables + stamps a resume grace-marker at 07:00. **Manual pause precedence:** if `logs/heartbeat.paused` exists (Peter's §2.14 bleed-stop) the job yields and does nothing — it must never auto-`enable` over a manual pause. Idempotent (acts on the current hour, robust to sleep/wake). Dry-run: `NIGHTWINDOW_DRYRUN=1 bash ~/.openclaw/scripts/heartbeat-nightwindow.sh`.
+
+**session-freshstart ([P6-82]/[P6-85]).** 06:55 daily. Archives then clears **only** the `agent:<id>:main` session (store entry + transcript) for `pa` and `pro`, so each morning's background session reloads genuinely lean from the memory files instead of a growing compaction summary; human `:telegram:direct:*` chats are **never** touched; archive-first ⇒ fully recoverable. Guards: skips a `:main` touched within 10m (in-flight turn); quiet-window-gated unless `--force`. Also invoked `--force --agent <id>` by the watchdog's intra-day reset net. By hand: `bash ~/.openclaw/scripts/session-freshstart.sh --dry-run` (shows selection, mutates nothing) or `--force --agent pa` for one agent.
+
+**chat-bloat-reset ([P6-119]/[P6-129]/[P6-132]).** Every 15m. session-freshstart deliberately never touches the human chat, but Marie's `:telegram:direct` session re-bloats to ~150K within hours and compaction then hits its hardcoded 60s aggregate timeout → she sticks / goes quiet on Peter's next message. This archives + clears **only** that chat session and restarts the gateway **only** when all three guards hold: `totalTokens >= CHAT_RESET_TOKENS` (env, default 130K), idle `>= CHAT_IDLE_MIN` (20m — never mid-turn), last-reset `>= CHAT_COOLDOWN_MIN` (120m — no restart-loop). `pa` only (`pro` doesn't bloat). Marie reloads state from her memory files; only the raw recent buffer is cleared (archived, recoverable) — never fires mid-conversation. By hand: `bash ~/.openclaw/scripts/chat-bloat-reset.sh --dry-run` (prints the verdict line, mutates nothing).
+
+**memory-health ([P6-119]).** 23:55 daily + RunAtLoad. The **Memory-Architecture-v2 canary**: reads each agent's trajectory + `openclaw memory status` + the daily memory files and computes the v2 acceptance-gate metrics (per-turn token median/p95/max, byte-truncation rate, compaction frequency, cache read:write, daily-file duplicate headings, index freshness). Writes a daily one-liner to `state/memory-health/daily.log`; raises a Telegram alarm to Peter **only** on a threshold breach **and** only when `ALARM_TELEGRAM=1` (default **off** until thresholds are calibrated on real data). Host-only, no billed turns. By hand: `DRYRUN=1 python3 ~/.openclaw/scripts/memory-health.py` (prints, sends nothing); `DAY=YYYY-MM-DD` scopes to a day.
+
+**cost-notify ([P6-105]/[P6-107]).** Every 3m. Tails each agent's trajectory, groups `model.completed` turns into tasks and, once a task settles, pushes Peter a Telegram note with **exact** token counts + a $ figure. **Console is authoritative:** with an Anthropic **Admin API key** present (env `ANTHROPIC_ADMIN_KEY`, or `agent-creds/anthropic-admin.key` 0600, or 1Password), the message's daily total is the **actual** billed USD from the Cost Report API; the per-task $ is a small static estimate labelled `(est)`. Never asserts a local estimate as truth (matches the CLAUDE.md cost-discipline rule — defer to the Console for figures). Host-only, no billed turns. By hand: `DRYRUN=1 python3 ~/.openclaw/scripts/cost-notify.py` (prints); `BACKFILL=<hours>` (dry-run) replays recent history.
+
+**reply-watcher (⑧, [P6-103]/[P6-104]; also the [P6-138] outbound-bounce interim sweep).** Every 15m. Polls a **bounded** Gmail query on the agent's own live direct-API cred (via `gmail_helper.py` **by PATH** — the script never reads the cred value) and, per new match, takes one **mode-gated** action: `REPLYWATCH_MODE=dryrun` (**DEFAULT** — poll+log only, zero spend, but the live poll still runs so scope is verifiable free), `notify` (free Telegram heads-up via the gateway bot send — not a billed turn), or `poke` (**BILLED** — wakes Marie via `openclaw agent --deliver`; hard-capped at `REPLYWATCH_MAX_PER_DAY`/day, downgrades to `notify` over the cap). Dedup via `state/reply-watcher.seen`. **Ships in `dryrun`** — do not flip to `notify`/`poke` without intent (`poke` spends). Verify: `tail ~/.openclaw/logs/reply-watcher.log`. It touches `agent-creds/**` (deny-Read) only through the helper — never surface those bytes.
+
+**cred-save-watch — the cred-save subsystem ([P6-108]/[P6-114]/[P6-115]).** Every 45s; runs `cred-save-drain.sh`. The agents' sandboxes have **no `op` binary** (host-only, deliberate), so Marie/Charlotte can only **request** a credential save by dropping a JSON into their gitignored `workspace-<id>/.cred-queue/pending/`. The drain scans both queues, actions each via `cred-save.sh` → `op-put.sh`, and writes a **display-immune** receipt (item id + sha256-12/len) the agent reads back. Two modes: `generate` (op generates the password host-side for account provisioning — the request is non-secret; any secret key is refused), and `existing` (take-over of Peter's **non-sensitive** accounts — carries a `password` which is **redact-shredded** from the request after storage; `sensitive:true` / card / token / pin / otp requests are refused). On a successful store it also host-deletes Peter's credential message from Telegram if the request carried the chat/message id (agents can't — it's a host CLI). Verify: `tail ~/.openclaw/logs/cred-save-watch.out.log`; queue state under `workspace-<id>/.cred-queue/{pending,results,processed}`. By hand: `bash ~/.openclaw/scripts/cred-save-drain.sh --dry-run`.
+
+### 2.16 Host secret-handling CLIs — autofill, payments, op-CLI wrappers
+
+These are **not** scheduled jobs — they are host-only, point-of-use tools invoked by the operator/hook while an agent is **paused**. All keep the secret **off** the model's context and **off** argv (the value goes into a `0600` `--fields-file` created under `umask 077` and unlinked in a trap; every one has a `--dry-run` that verifies resolution display-immune — sha256-12 + length — with no fill and no navigation). `op` lives on the **host only**, never in a sandbox, so a compromised container never holds the vault token. Credential HYGIENE (§1, §1.5/§1.6) applies unchanged.
+
+**op-get / op-put / op-list — the 1Password automation wrappers ([F70] resolution).** Driven by the OpenClaw **service-account** token (`OP_SERVICE_ACCOUNT_TOKEN`) — the unattended-safe auth path (no interactive `op signin`, no `OP_SESSION`), which is exactly what launchd needs. Token source order: env, else the `0600` deny-Read `agent-creds/op-service-account.token` (Peter provisions it; the scripts never handle the value). `op-get.sh 'op://OpenClaw/<item>/<field>'` emits a value for piping (or `--verify` → sha256-12 + len only), and **refuses any non-`op://OpenClaw/*` ref** (least privilege — single-vault scope). `op-put.sh` creates + stores **agent-provisioned** accounts into the dedicated **`Agent-Provisioned`** vault (never the OpenClaw ops vault where SA/tokens/the Marie PA card live), with an op-generated password and a consistent schema/tags. `op-list.sh` prints **only** non-secret structure (vault names, item titles/categories, field ids/labels — never a value). Keep the service account **read-only-or-scoped** in the 1Password console — verify least privilege there, not by assumption.
+
+**cred-fill — account self-provisioning last-mile ([P6-136], built + proven E2E).** Fills an op-**generated** password into a live signup form so an agent creates an account **without ever seeing the password** ("gate at value"). Ordering: `cred-save.sh --mode generate` must have already generated+stored it (the receipt gives `op://Agent-Provisioned/<id>/password`); cred-fill reads **that** ref and fills the snapshot refs the paused agent surfaced (it never generates and never reads back into the sandbox). Refuses any non-`Agent-Provisioned/*` ref (cards / ops secrets out of scope). Dry-run: `cred-fill.sh --op-ref op://Agent-Provisioned/<id>/password --password-ref R1 --dry-run`.
+
+**pay-fill — autonomous payments (6c.19).** Host fills card fields at a checkout **by 1Password ref** (Marie snapshots the payment page and surfaces field refs — she sees refs, never values; the card is resolved via op-get by UUID from the OpenClaw vault; `--card uk|intl` selects Revolut/N26). Real payments are **irreversible** → strict **prepare-and-surface**: the host fills only **after** Marie surfaced "ready to pay" and Peter approved, with no agent browser-read turn between fill and submit. **KNOWN LATENT PATH BUG — flagged for the Andreas payment work:** `pay-fill.sh` hardcodes `PATH=/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin`, **missing `~/.npm-global/bin`**, so an `openclaw` call under a minimal launchd/hook env can fail to resolve the CLI. This is the **same class** as the cred-fill PATH bug **fixed live at 6c.30** (cred-fill now carries `$HOME/.npm-global/bin` first). **Fix pay-fill's PATH before wiring it into any unattended caller.** Dry-run: `pay-fill.sh --ccnum-ref R1 --expiry-ref R2 --cvv-ref R3 --dry-run`.
 
 ## 3. Quick-reference card
 
@@ -398,7 +458,7 @@ The watchdog PAUSE guard is a **temporary** P6-77 patch; when the WS-8 alerting 
 
 ```
 ~/.openclaw/                            — root of all operational state
-  openclaw.json                         — main config (7400 B / sha12 f1e79fafbaae, mode 0600)
+  openclaw.json                         — main config (10489 B / sha12 3267edd8b6aa, mode 0600, A-7 clean; pin 2026.4.22)
   secrets.json                          — API keys plaintext (~245 B, mode 0600)
   credentials/                          — per-credential files (all mode 0600)
   agents/{id}/sessions/sessions.json    — per-agent session store index
@@ -408,11 +468,21 @@ The watchdog PAUSE guard is a **temporary** P6-77 patch; when the WS-8 alerting 
   logs/gateway.log                      — lifecycle log
   logs/gateway.err.log                  — security/audit log
 
-~/Library/LaunchAgents/
-  ai.openclaw.gateway.plist                          — gateway supervisor (KeepAlive+RunAtLoad, 2309 B)
+~/Library/LaunchAgents/   (11 live + 2 descoped; all gui/502 — bootstrap/bootout GUI-only per D20; full ops table §2.15)
+  ai.openclaw.gateway.plist                          — gateway supervisor (KeepAlive+RunAtLoad, 2309 B, §2.1)
+  ai.openclaw.colima.plist                           — Colima runtime start at login (RunAtLoad, KeepAlive=false, §2.15)
+  ai.openclaw.colima-socket-watchdog.plist           — docker-socket health probe, every 5m (§2.15)
+  ai.openclaw.heartbeat-watchdog.plist               — beat-stall + WS-8 alerting + :main reset net, 15m (§2.14/§2.15)
+  ai.openclaw.heartbeat-nightwindow.plist            — suppress/restore beats 23:00/07:00 (§2.15)
+  ai.openclaw.session-freshstart.plist               — daily lean :main reset, 06:55 (§2.15)
+  ai.openclaw.chat-bloat-reset.plist                 — Marie chat self-heal when bloated+idle, 15m (§2.15)
+  ai.openclaw.memory-health.plist                    — memory-v2 canary, 23:55 + RunAtLoad (§2.15)
+  ai.openclaw.cost-notify.plist                      — per-task token+$ push, 3m (§2.15)
+  ai.openclaw.reply-watcher.plist                    — bounded Gmail poll (dryrun default), 15m (§2.15)
+  ai.openclaw.cred-save-watch.plist                  — credential-save queue drain, 45s (§2.15)
   ai.openclaw.vault-backup.plist                     — Obsidian→gdrive daily 04:00 (1122 B, §2.9)
-  ai.openclaw.calendar-backup.plist.disabled-D24     — descoped (D24); not loaded
-  ai.openclaw.security-audit.plist.disabled-D24      — descoped (D24, F68); not loaded
+  ai.openclaw.calendar-backup.plist.disabled-D24     — descoped (D24); not loaded (§2.12; verify at 6d)
+  ai.openclaw.security-audit.plist.disabled-D24      — descoped (D24, F68); not loaded (§2.12)
 ```
 
 ### 3.2 Key commands
@@ -427,8 +497,8 @@ openclaw models status                                                 # inferen
 openclaw memory status                                                 # per-agent memory health
 openclaw sessions --agent <id>                                         # per-agent session list
 openclaw devices list                                                  # SSH-side device pairings
-launchctl list | grep openclaw                                         # launchd registration
-launchctl print gui/$(id -u)/ai.openclaw.vault-backup 2>&1 | head -3   # F69: head-3, NEVER head-1
+launchctl list | grep ai.openclaw                                      # LaunchAgent fleet (11 live; §2.15)
+launchctl print gui/$(id -u)/ai.openclaw.<job> 2>&1 | head -3          # per-job state — F69: head-3, NEVER head-1
 
 # 1Password
 op whoami                                                              # session active?
@@ -473,7 +543,7 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/ai.openclaw.gateway.plis
 - **F14 v2 chat-layer linkification.** The chat interface auto-converts any dotted-TLD string (`.json`, `.md`, `.sh`) into a clickable link, which can obscure the actual bytes. Defense pattern: use sha12 + byte-length as verification proxies; use shell variables for paths in commands.
 - **F17 staging pattern.** Always stage credential file edits as `<filename>.new` in the same directory as the target, then rename-only `mv`. Never `mv` from `/tmp` (macOS regresses permissions on tmp-rooted moves).
 - **F25 re-materialise.** Auth-profile-resolved credentials require explicit re-materialise after rotation; restart alone won't refresh them.
-- **F44.** The calendar-backup-token's 7-day TTL issue. Currently moot — calendar-backup is descoped (D24, §2.12); F44 resurfaces only on re-enable (Phase G, ~2026-07-23±), which includes the Production-OAuth move that removes the 7-day TTL.
+- **F44.** The calendar-backup-token's 7-day TTL issue. Currently moot — calendar-backup is descoped (D24, §2.12); F44 resurfaces only on re-enable (Phase G, ~2026-07-23± — date/status unverified at 6c.31, confirm at 6d), which includes the OAuth app Internal/Production flip that removes the 7-day TTL.
 - **F45 ceremony.** The gateway restoration procedure for when automatic `KeepAlive` recovery has not kicked in. See §2.1.
 - **Daily digest.** Per-agent structured summary written at nightly consolidation. Stored in `~/.openclaw/shared/daily-digests/YYYY-MM-DD/{agent}.md`. CoS reads all; other agents read relevant ones.
 - **Re-baseline.** Capturing fresh sha12 + byte-size anchors for a runtime-mutable file (notably `models.json`) at session boundaries to detect inter-session drift.
@@ -486,6 +556,18 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/ai.openclaw.gateway.plis
 - **F61.** The embedding credential resolves via the per-agent `openai:default` auth-profile, not `secrets.json`; new agents need it provisioned before their first embedding call.
 - **F68.** launchd's minimal PATH omits `/opt/homebrew/bin`; any launchd job using a Homebrew binary needs an `EnvironmentVariables` PATH or it fails silently (was the security-audit failure).
 - **F69.** Tahoe `launchctl print` emits `Bad request.` as a cryptic line-1; always `head -3` (never `head -1`) to read the real diagnostic.
+- **P6-N / PHASE-6-DEVIATIONS-LOG.md.** The **live** deviations log for Phase 6 (P6-N codes, plus new F/D/S findings). Additive-only. The Phase-0 `DEVIATIONS-LOG.md` is frozen. See §0.
+- **colima / colima-socket-watchdog.** `colima` autostarts the container runtime at login (RunAtLoad, KeepAlive=false — supersedes any manual-start-after-reboot step); the watchdog (5m) probes the docker socket and restarts Colima on a wedged-but-alive socket. See §2.15.
+- **heartbeat-watchdog.** 15m beat-stall supervisor: restarts the gateway on a stalled loop, runs WS-8 alerting, carries the intra-day `:main` reset net. [P6-59] taught it to watch the *real* beat signal, not a proxy (a broken watchdog once starved `pro` ~20h). See §2.14/§2.15.
+- **heartbeat-nightwindow.** Suppresses beats 23:00–07:00 (cost) via a `heartbeat.night` sentinel; manual pause takes precedence. See §2.15.
+- **session-freshstart.** 06:55 daily archive+clear of the `:main` session so it reloads lean; human chats untouched; archive-first. See §2.15.
+- **chat-bloat-reset.** Self-heals Marie's `:telegram:direct` chat when both bloated (`CHAT_RESET_TOKENS`) and idle, then restarts the gateway; archive-first, `pa` only ([P6-119]/[P6-132]). See §2.15.
+- **memory-health.** Daily Memory-Architecture-v2 canary; logs metrics, Telegram-alarms only on a breach with `ALARM_TELEGRAM=1`. Host-only. See §2.15.
+- **cost-notify.** 3m per-task token+$ push; daily total from the Anthropic Cost Report API when an Admin key is present — Console is authoritative, never a silent local estimate. See §2.15.
+- **reply-watcher.** 15m bounded Gmail poll surfacing awaited replies; modes `dryrun` (default, free) / `notify` (free) / `poke` (billed, day-capped). [P6-138] outbound-bounce interim sweep. See §2.15.
+- **cred-save subsystem.** Host-mediated credential SAVE for the sandboxed agents (no `op` in-sandbox): they queue a request in `workspace-<id>/.cred-queue/`, `cred-save-watch` (45s) drains it via `cred-save.sh`→`op-put.sh`; `generate` vs `existing` (shredded) modes. See §2.15.
+- **cred-fill / pay-fill.** Host point-of-use autofill while the agent is paused: cred-fill injects an op-generated **password** into a signup form ([P6-136]); pay-fill injects **card** fields at a checkout by 1Password ref (prepare-and-surface; irreversible). Secret never enters the model context. pay-fill has a latent PATH bug (missing `~/.npm-global/bin`) flagged for the Andreas payment work. See §2.16.
+- **op-get / op-put / op-list.** Host-only 1Password wrappers over the read/write **service account** (`OP_SERVICE_ACCOUNT_TOKEN`), least-privilege vault-scoped (get refuses non-`OpenClaw`; put targets the dedicated `Agent-Provisioned` vault; list prints structure only). Closed [F70]. See §2.16.
 
 ---
 

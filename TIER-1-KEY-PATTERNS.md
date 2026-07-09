@@ -647,6 +647,19 @@ If the build session needs concrete starting points, these are the ones that del
 
 ---
 
+## 13. Phase-6 hard-won patterns (addendum, 6c.31 — see `MASTER-ARCHITECTURE-v7.md` for the full as-built)
+_These are the cross-cutting lessons that only surfaced by building the live pair (Marie/Charlotte) through Phase-6. v7 is authoritative; this is the pattern digest a future builder should internalise before touching the system._
+1. **Host-mediated secrets — the sandbox never holds a secret.** Every credential step is performed by the *host* (`op` host-only; `pay-fill`/`cred-fill`/`cred-save-watch`); the agent orchestrates around an opaque ref and never sees the value. This is the spine — do not add a capability that puts a secret in the container/context (P6-88/P6-115/P6-136).
+2. **Gate at value, not by enumeration.** The open web can't be allowlisted; enumerated "trusted sites" broke real bookings. Allow all public hosts + block private IPs at the choke point, and gate *value at the card issuer* (capped virtual card), not in agent logic (P6-42/P6-45).
+3. **Hard mechanism, not brief rule, for anything that spends or sends.** Model reticence is soft and probabilistic (the T5 "L1 wall" was brief-policy, not a runtime guard). Loop-protection (S11), the pulse send-gate, the payment stop must be *code-level* gates. Brief rules are coping-not-cure (P6-102/P6-128/P6-136).
+4. **The un-reset long-lived session is the crux of BOTH cost and unreliability.** `:telegram:direct` grows unbounded → 256KB whole-prompt truncation + compaction-timeout stick + cache-miss cost. Bounding/slicing it is the cure; chat-bloat-reset is the proven backstop (P6-116/P6-119/P6-125).
+5. **Cost is heartbeat-metronome-dominated.** A beat costs even when silent (cognition runs regardless). The levers are cadence, `contextTokens`, `compaction.model`, and cutting the bloat that fills the window — never "raise the cap". NEVER Opus for tests (P6-51/P6-85).
+6. **The inode-pin gotcha.** A single-file bind mount pins the inode at container creation; an F17 atomic-rename update needs `sandbox recreate` or the container keeps the stale (often truncated) inode, exit-0-silent. Directory binds re-resolve; file binds do not (P6-113).
+7. **Measure, don't assert.** The memory-v2 "biggest lever" (`toolResultMaxChars`) was already tight; two "gate fails" were telemetry-cap mismeasurement; local $ overstated Console by ~2.7×. Verify config keys against the pinned build (A-12); defer $ to the Console (P6-109/P6-137).
+8. **Recurring incidents clustered in one area = a foundation smell.** ~10 sessions patching the memory substrate was patching a missing component. Recognise the patch-on-flaw signature and propose a principled rebuild (PROPOSE-not-EXECUTE) — the standing CoS mandate (P6-116/P6-49).
+
+---
+
 ## Version notes
 - Compaction bug fixes: require `openclaw --version` ≥ `v2026.2.23`.
 - Per-agent sandbox/tool restrictions: available from `v2026.1.6`.
