@@ -145,3 +145,12 @@ M1 quarterly Python google-* dep upgrade (first ~Aug 2026) · M2 gogcli/Brew upg
 9. **F31 / S5 / D18** — container retention, DR dry-run, Python 3.13 — system-surface debt to retire as Andreas adds load. _(Plus the standing autonomous-payments F26 + payment-form-automation track, [P6-99]/[P6-117].)_
 
 _(Items already being cleared in 6c.9 — §A.1 — are omitted from this shortlist.)_
+
+---
+## 6c.32 addendum — S11/SR-1 BUILT (inert); must-resolve-before-A2A-live gates ([P6-140]/[P6-142])
+Shortlist #2 (S11 design) + #4 (SR-1) are now **built inert** (6c.32): the host mailbox/watcher, all 5 layers, the sessions_spawn budget, and `carry-chain-audit.py`. The pre-push adversarial self-audit ([P6-142]) fixed the robustness bugs (mailbox-wedge, dryrun-HALT, hop coercion, counter durability, fail-open audit) and flagged these **hard gates that MUST be resolved before A2A is enabled live (the 6d wiring session):**
+1. **Envelope construction + topology (#1 gate).** Decide hub-synchronous (`--deliver` returns) vs peer-relay; define the agent-side constructor (mints conversation_id / increments hop / appends path / whether a reply resets it); reconcile the L1 cycle-check vs the per-pair budget. Without this A2A may not function.
+2. **Provenance hardening.** Host-reconstruct path/hop from `ledger.jsonl` per conversation_id (robust vs a mis-constructed envelope), or accept + document the accidental-loop-only threat model.
+3. **L3 real £/Console hook** (a turn-count proxy today) + **midnight reset** of conversation-scoped budgets.
+
+Meanwhile the numeric budgets (conv 8 / pair 2 / hop 4 / fanout 2 / daily 30·10 / fleet 60 / spawn 3-per-hr) are the robust primary guard; A2A stays OFF in config. Full open-list: `shared/a2a/README.md §Open`.
