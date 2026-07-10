@@ -28,6 +28,7 @@ Reversible reads + host-side authoring + `git commit` run without prompting. **S
 ## Carry-forward — ★ PATH TO 6d ([P6-76]), status
 1. **✔ Acceptance gate PASS (6c.30); ✔ v7 CAPSTONE (6c.31); ✔ Andreas reversible foundation (6c.32, [P6-140]).**
 2. **→ 6d pairing = THIS SESSION** (Stage 1) → then his object-level remit (Stage 2 + the ⛔ backlog) as billed capabilities land, each F26-verified.
+- **★ [P6-143] Marie signature-on-drafts fix** — the signature only appends on the direct `send` verb; Marie's L1 `draft`→`send-draft` approve-flow sends UNSIGNED. Fix prepared: `scripts/apply-6c33-sig-on-draft.py` (sign marie@ drafts at draft-time). **Peter runs it via `!`** (deny-Read helper), then: verify a real marie@ send carries the signature + **re-sync the agent-tools mirror** if one is kept separately from the `agent-creds/gmail_helper.py` bind source.
 - **P6-134 organic verify** — a real multi-cc send landing BOTH recipients on Marie's next such send (free-inspection).
 - **[P6-141] doc-currency:** v7 PART 10 §SR-1 names `openclaw-config` for the docs (should be `openclaw-docs`) — Andreas's first doc-currency reconcile task; the live briefs are already corrected.
 - **Optional reversible (Peter-run, non-blocking):** `CHAT_RESET_TOKENS`→~70000; periodic reindex; orphan 1Password item `efrhqyifslubmapond7wb6mmee`; MEMORY.md RATIONALE-rotation; Charlotte/Marie avatars.
