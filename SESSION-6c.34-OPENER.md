@@ -1,0 +1,39 @@
+# SESSION 6c.34 — **Marie screenshot-delivery FIX + F26 (payments/booking-critical, freshly pinpointed [P6-146])**, then **Andreas Stage-2 object-level remit** (cost model + 08:00 digest cron). Andreas is LIVE as of 6c.33 ([P6-145]): `cos` block activated, `@andreas_pf_bot` paired + sender-approved, **F26-passed** on the real Telegram→gateway path (Sonnet), back on Opus, A2A OFF, A-7 clean. This session turns the newly-live CoS toward his object-level job **and** fixes the one capability the pairing session proved still broken.
+
+_6c.33 delivered the lead (Andreas paired + F26 PASS) and, via the bundled Marie screenshot F26, **falsified** the [P6-103] "screenshots deliver" claim: the agent-turn path emits a `MEDIA:~/…png` tilde text directive → `sendMessage`, never `sendPhoto` → stripped, no image. openclaw.json `3267edd8b6aa`→`24715f4045bd`/10748B (A-7 clean)._
+
+## Stage 0 — Ledger (no mutating work until GREEN)
+- **A-7:** live == last-good == **`24715f4045bd`/10748B**, 600/staff. Pin 2026.4.22. `cos`=Andreas/opus-4-7/6h-heartbeat/A2A-OFF, `pa`=Marie/opus-4-7. (openclaw.json Bash-deny-listed — verify via `shasum` + `config get`, never Read; changes Peter-run via `!`, revert from `openclaw.json.last-good`.)
+- **Deviations currency:** **P6-1…146 gap-free** — re-run `scripts/carry-chain-audit.py --log _session-docs/PHASE-6-DEVIATIONS-LOG.md --repo _session-docs` at open AND close. Known 21/22 header dups — leave them.
+- **Context check ([P6-117]):** confirm GUI empirically (`SSH_CONNECTION` empty, `gui/502` reachable) before any restart/billed turn. Any billed test = **Sonnet only, one short turn, re-confirm before firing** ([[no-unauthorized-test-spend]]).
+- **★ Andreas live-state to verify unchanged (6c.33 [P6-145]):** `cos` block `name:Andreas`, `heartbeat.every:6h`, `model:opus-4-7`, `tools.alsoAllow=[cron]` (A2A/gateway OFF); `openclaw agents list` → "Telegram cos (Andreas): configured"; healthz 200. Foundation (`workspace-cos/AGENTS.md 09a1aeb76564`/17176B, `a2a-watch.py f3460ae17105`, `carry-chain-audit.py 375f8e9dc1e9`, `shared/a2a/` HALT-present/ledger-empty INERT).
+
+## Stage 1 — the LEAD: fix Marie's screenshot delivery + F26 ([P6-146], payments/booking-critical)
+The one capability 6c.33 proved still broken. Root cause is sharp: Marie's `browser screenshot` produces `media/browser/<uuid>.png` (the file IS created) but her reply delivers it as a **`MEDIA:~/…png` tilde text directive** → the channel sends `sendMessage` (text), never `sendPhoto` → stripped. The host-side `message send --media` path DELIVERS (6c.32 msg-1685, Peter-confirmed), so the channel is fine — the bug is the **agent-turn attachment**.
+1. **Locate where the tilde/text form originates** (read-only first): the Tier-1 `browser` screenshot verb's returned path, the Rich-Output-Protocol structured-media reply field, or a sandbox helper. Determine config/brief-fixable vs dist-level (→ browser last-mile [P6-130]/Andreas). Grep the dist for the `MEDIA:`/`mediaUrl` emission + tilde handling.
+2. **Re-check the [P6-120] media-caps regression hypothesis** — `agents.defaults.imageMaxDimensionPx=1024` + `browser.snapshotDefaults.mode=efficient` (the opener [P6-144]④ flagged these; efficient-mode is the text-snapshot, distinct from the screenshot verb, but confirm it isn't stripping the attach).
+3. **Fix** so the agent screenshot-reply is a **structured host-absolute attachment** (as `message send --media` is), not a `MEDIA:~/…` tilde line. Reversible/brief/config where possible; F17/SHA-anchored; Peter-applied if it touches openclaw.json.
+4. **★ F26-verify** — a real Marie `browser screenshot`→reply, **Peter confirms he SEES the image** in Telegram (one cheap Sonnet Marie turn; flip `pa`→sonnet via `apply-6c33-agent-model.sh pa sonnet`, test, revert). Done ONLY on Peter's visual receipt confirmation. Durable cure = delivery working (removes the fabrication trigger); no new honesty text.
+
+## Stage 2 — Andreas object-level remit (each F26-verified before the next; only after Stage 1 or in parallel where independent)
+- **★ Precise per-ACTION cost model [P6-144]/[P6-85] (flagship).** Real $ per action (turn + tool call), driver-decomposed (in/out, cache-write [dominant], cache-read, image, flush), attributed per task/workstream/agent, from the Anthropic Cost/Admin API; **acceptance = reconciles to Console day-total ≈±15%** or flagged untrusted; track AND optimise (measured levers incl. per-task Opus↔Sonnet routing). Spec in `COS-PLAYBOOK §Stewardship(b)`. PROPOSE-only. Retires Marie's ~20×-off local meter.
+- **08:00 digest cron.** Build via the **host-launchd pattern** — a new `ai.openclaw.cos-briefing.plist` → `openclaw agent --agent cos … --deliver` (matches the 12 existing jobs); the `cron` **agent-tool is inert** here (`cron.enable` unset — [P6-145]; enabling it is a top-level-block+restart alternative if Peter prefers). Assembles all agents' `shared/daily-digests/<date>/*.md` + calendar + overdue todos into one Telegram message.
+- **SR-1 doc-currency (first task):** reconcile the v7 PART 10 §SR-1 `openclaw-config`→`openclaw-docs` drift ([P6-141]); infra-currency steward loop (propose-only).
+
+## Stage 3 — A2A live (6d wiring; only when Stages 1–2 stable)
+FIRST code the **resolved [P6-142] gates** ([P6-145]): (a) **hub-synchronous** envelope constructor — host mints `hop`/appends `path`, replies return inline (not new envelopes); (b) **host-authoritative** hop/path reconstructed from `ledger.jsonl` per `conversation_id` (agent values = untrusted hints). THEN bootstrap the staged `a2a-watch.plist` in **`A2A_MODE=dryrun`** (GUI/D20), verify `ledger.jsonl` over real traffic. Only then: flip `A2A_MODE=live` **+** remove `shared/a2a/HALT` **+** grant `sessions_send` (+ hard-gated `sessions_spawn`) in openclaw.json. Kill lever: `touch shared/a2a/HALT`.
+
+## ⛔ FLAGGED FOR ANDREAS / 6d build-content (design done; do NOT attempt in interim)
+Transactional last-mile (CAPTCHA [P6-39] + hosted-field card-fill [P6-135] + `pay-fill.sh` PATH bug); browser backend gap (Playwright-Chromium swap; per-site recipes; `browser-dep-repair.sh` guardrail — **the screenshot-delivery fix [P6-146] may fold in here if dist-level**); hard code gates (pulse send-gate [P6-128] + marie@ approval-token + memory-overwrite refusal); outbound-bounce/DSN sweep [P6-138]. Full ledger: `PRE-COS-BACKLOG.md`.
+
+## Safety rails
+Reversible reads + host-side authoring + `git commit` run without prompting. **Surface irreversible/outward-facing:** any **openclaw.json edit** (F17 staged, Peter-applies via `!`) + gateway restart (GUI/D20); any **billed turn** (Sonnet-only, re-confirm before firing); enabling A2A. `openclaw.json` jq/mv/cp + raw `launchctl` + `op` mutations + `rm` + `docker exec` DENY-listed → Peter runs via `!`. **Secrets [F21/F51]:** never Read openclaw.json / agent-creds/**; structural `config get`/`jq`-on-keys + `shasum` only. GUI/Aqua for restart + any pairing/2FA (D20).
+
+## Carry-forward — status
+1. **✔ Acceptance gate (6c.30); ✔ v7 CAPSTONE (6c.31); ✔ Andreas reversible foundation (6c.32); ✔ Andreas PAIRED + F26 PASS (6c.33 [P6-145]).**
+2. **→ THIS SESSION:** Marie screenshot fix + F26 ([P6-146]) → Andreas Stage-2 object-level remit → (later) A2A live.
+- **[P6-146] Marie screenshot delivery** — the Stage-1 lead (above).
+- **[P6-144] carries:** reply-watcher NOTIFY→DRYRUN plist reload (Peter-run, if not done); Marie normal-turn memory-overwrite hard-guard (Andreas tooling); pulse send-gate [P6-128].
+- **[P6-141] doc-currency:** v7 PART 10 §SR-1 repo-name — Andreas's first SR-1 reconcile.
+- **P6-134 organic verify** — a real multi-cc Marie send landing both recipients (free-inspection).
+- **Optional reversible (Peter-run):** `CHAT_RESET_TOKENS`→~70000; MEMORY.md RATIONALE-rotation ([P6-116]); Andreas + Charlotte/Marie avatars.
