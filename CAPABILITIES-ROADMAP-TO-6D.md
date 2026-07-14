@@ -55,7 +55,8 @@ The pre-6d **trio shake-out is removed.** Order:
 1. **Marie** (PA) — ✓ live.
 2. **Charlotte** (ProA) — ✓ live.
 3. **Andreas** (CoS, 6d) — **next**, on the proven pair.
-4. **Travel / Research** — after CoS. **(Confirmed 2026-07-02, Peter, [P6-85]: the Travel agent is POST-Andreas — build only once Marie+Charlotte+Andreas do what's expected. Corrects the drift in recent openers that listed Travel at "6c.15"/pre-6d; travel is post-6d.)**
+4. **Travel** — **the next agent after Andreas (Peter, 2026-07-14, [P6-147]): real need — Travel operational by ~early August 2026.** Supersedes the earlier "Travel/Research, Research-leaning" read. Still POST-Andreas per [P6-85] (build once Marie+Charlotte+Andreas "do what's expected" — NOT Andreas 100% complete; A2A/doc-autopilot may trail). v1 = **prepare-and-surface** (find → drive to booking/checkout screen → surface w/ screenshot → Peter completes payment+2FA); no auto-pay/hosted-field card-fill ([P6-135] deferred). Critical-path dep: the screenshot-delivery fix ([P6-146], 6c.34 lead).
+   4b. **Research** — after Travel (was the Research-first lean; Peter re-ordered Travel ahead on the Aug need).
 5. **SDR** — at Hylean active-sales (driven by need, not the build clock).
 6. **Finance** — after Drive / sensitive-data handling is proven.
 7. **Sophie** (family coordinator) — once the family surface is ready (multi-human trust piloted via Marie first).
