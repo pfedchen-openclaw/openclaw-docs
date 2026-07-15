@@ -1,4 +1,4 @@
-# SESSION 6c.35 — **Andreas Stage-2 finish** (install briefing + reconcile cost model + digest-source + SR-1), then **A2A live (Stage 3)** groundwork
+# SESSION 6c.35 — **Andreas Stage-2 finish** (briefing installed ✓ + digest-source de-dupe + SR-1), then **A2A live (Stage 3)** groundwork
 
 _6c.34 delivered the lead — **Marie screenshots now reach Peter** ([P6-146], F26 PASS: 2-edit design-faithful dist patch to the sandbox reply-media normalizer + brief fix) — and shipped Andreas's two Stage-2 objects: the **per-action cost model** (`cost-breakdown.py`, cache≈90%/naive-meter-10-13×-under, reconciliation wired) and the **08:00 CoS briefing v1** (`cos-briefing.py` + staged plist, DRYRUN-verified). openclaw.json UNCHANGED (`24715f4045bd`/10748B, A-7 clean). Deviations P6-146(resolved)/P6-148._
 
@@ -8,8 +8,8 @@ _6c.34 delivered the lead — **Marie screenshots now reach Peter** ([P6-146], F
 - **Deviations currency:** P6-1..148 gap-free — re-run `scripts/carry-chain-audit.py` at open AND close.
 - **Context/GUI ([P6-117]):** confirm `SSH_CONNECTION` empty + `gui/502` before any restart/billed turn. Billed test = Sonnet, one short turn, re-confirm first ([[no-unauthorized-test-spend]]).
 
-## Stage 1 — finish Andreas Stage-2 (mostly Peter-gated installs + a reconcile; each verified)
-1. **Install the 08:00 briefing** (Peter/GUI-D20): copy `scripts/ai.openclaw.cos-briefing.plist.staged` → `~/Library/LaunchAgents/ai.openclaw.cos-briefing.plist`, `launchctl bootstrap gui/502 …`. **First a £0 smoke test:** `python3 ~/.openclaw/scripts/cos-briefing.py --send --target 253509519` → Peter confirms it renders well in Telegram. (DRYRUN already verified assembly; this confirms delivery + formatting.)
+## Stage 1 — finish Andreas Stage-2 (briefing already installed 6c.34; digest de-dupe + SR-1; each verified)
+1. **✔ 08:00 briefing INSTALLED (6c.34)** — plist bootstrapped in `gui/502` (`state = waiting`), smoke-test sent + Peter confirmed clean rendering. Fires 08:00 local daily. Nothing to do unless it misfires (check `logs/cos-briefing.launchd.err.log`).
 2. **Cost-model reconciliation — NOT this session (Peter 6c.34; Andreas owns the decision).** Admin API confirmed **unavailable** (no Admin Keys on the account). The model **undercounts absolute-$ ~4×** vs the agents-only Console total (coverage: misses rotated/archived trajectories) — logged as an **Andreas-owned potential improvement** in `PRE-COS-BACKLOG.md §addendum(2)`, deferred. Do NOT pick it up next session. Relative attribution + optimisation (cache ≈90%) are already trustworthy and need no calibration.
 3. **Digest-source reconciliation** ([P6-148]) — decide the fleet digest location (`shared/daily-digests` vs the real `workspace-*/memory/<date>.md`) + **de-dupe the CoS briefing vs Marie's existing 8am digest** (avoid two morning messages). Update `cos-briefing.py` + the agents' briefs accordingly.
 4. **SR-1 doc-currency** ([P6-141]) — Andreas's first steward task: reconcile v7 PART 10 §SR-1 `openclaw-config`→`openclaw-docs`.
@@ -27,4 +27,4 @@ Reversible reads/host-authoring/`git commit` run without prompting. **Surface ir
 
 ## Carry-forward — status
 1. **✔ Acceptance gate (6c.30); ✔ v7 CAPSTONE (6c.31); ✔ Andreas foundation (6c.32); ✔ Andreas PAIRED+F26 (6c.33); ✔ Marie screenshot fix + F26 (6c.34, [P6-146]); ✔ Andreas Stage-2 objects built (6c.34, [P6-148]).**
-2. **→ THIS SESSION:** install/verify briefing + reconcile cost model + digest-source + SR-1 → A2A live groundwork.
+2. **→ THIS SESSION:** digest-source de-dupe (vs Marie's 8am) + SR-1 doc-currency → A2A live groundwork. (Briefing installed 6c.34; cost-model reconciliation deferred to Andreas-owned backlog — not this session.)
