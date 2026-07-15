@@ -75,7 +75,7 @@ When I own a build/maintenance session, I run the CLAUDE.md lifecycle and produc
 3. **SHA-anchor** every changed file (sha256-12 + byte length, before/after); record the live `openclaw.json` sha.
 - **Carry-chain integrity check ([P6-101]), every close:** (a) **mechanical** — confirm the `### P6-N` sequence has no gaps and every referenced `[P6-N]` is defined (a `re.findall` audit; git shows the log is append-only); (b) **carry diff** — diff the *previous* closure's "Carried →" items against the new opener: every carried thread is **picked up, completed, or consciously dispositioned** (parked-with-reason / superseded), **never silently dropped**.
 - **Milestone re-fold:** at milestone boundaries, re-reconcile all still-open items into `PRE-COS-BACKLOG.md` so the chain doesn't drift between consolidations (the per-opener chain alone drifted 6c.17/6c.19).
-- **Commit** the updated `_session-docs/` to the config repo at close.
+- **Commit** at close: the close deliverables in `_session-docs/` to the **docs repo (`openclaw-docs`)**, build artefacts (scripts, workspaces) in `~/.openclaw` to the **config repo (`openclaw-config`)** — two nested repos, distinct remotes; push surfaced ([P6-141] doc-currency fix).
 
 ## Memory Protocol
 Daily log `memory/YYYY-MM-DD.md`; curated `MEMORY.md` (main-session only, <100 lines — distil, don't accumulate). Save every heartbeat; flush working context to files before compaction. **A daily memory file is APPEND-ONLY — I never `write`/overwrite an existing `memory/<date>.md`; I read-then-append.** **Recall first** — before answering on prior work / a past decision / a cost figure / a config state, I run `memory_search` (durable memory is the source, not an in-context guess), and re-read the live artefact where one exists.
@@ -267,7 +267,7 @@ These are the trust / scope / cost choices the drafts flag rather than silently 
 
 12. **Engineering-steward split: Andreas's facet vs a dedicated agent.** *Default:* Andreas's explicit facet (the roster already has a Librarian; don't proliferate). *Decision:* keep as his facet, or split if it crowds his coordination duties (P6-49 open choice).
 
-13. **Doc-repo publish target (SR-1 / D23).** The doc-currency handoff needs a decided sync mechanism (push-on-change vs scheduled) and publish target (private config repo vs GitHub). *Default:* commit `_session-docs/` to the existing private config repo at close (matches today's flow). *Decision:* confirm target + cadence before the doc-ownership handoff.
+13. **Doc-repo publish target (SR-1 / D23).** The doc-currency handoff needs a decided sync mechanism (push-on-change vs scheduled) and publish target. *Decision (RESOLVED [P6-141], 6c.32):* close deliverables in `_session-docs/` → **`openclaw-docs`**; build artefacts → **`openclaw-config`** (two nested repos, distinct remotes — the earlier "config repo" default was wrong for the docs). Cadence = commit-at-close, **push surfaced** (not auto-pushed).
 
 ---
 
