@@ -1,0 +1,28 @@
+# SESSION 6c.34 — CLOSURE: Marie screenshot-delivery FIXED (F26 PASS, the lead) + Andreas Stage-2 remit shipped (per-action cost model + 08:00 briefing v1)
+
+_The lead ([P6-146]) delivered: browser screenshots now reach Peter in Telegram — proven end-to-end through the real Telegram→gateway path with a real Marie turn. Then the two Andreas object-level deliverables were built + verified: the flagship per-action cost model and the 08:00 CoS briefing v1. Everything reversible ran under the autonomy posture; the one billed step (Marie F26, Sonnet) was authorised. **openclaw.json UNCHANGED — `24715f4045bd`/10748B, A-7 clean.** Deviations: **P6-146 (resolution appended), P6-148**._
+
+## Done
+- **Stage 0 GREEN.** A-7 clean (live==last-good==`24715f4045bd`/10748B/600/staff); carry-chain audit PASS (P6-1..147 gap-free, now 148); GUI context (SSH empty); Andreas live-state unchanged (`cos`=Andreas/opus-4-7/6h/`alsoAllow=[cron]`, healthz 200); A2A INERT (HALT present, ledger empty); foundation shas match.
+- **★ LEAD — [P6-146] Marie screenshot delivery FIXED, F26 PASS.** Root cause was **deeper than the 6c.33 tilde diagnosis**: for a **sandboxed** agent the reply-media normalizer drops ANY media whose host-path escapes the sandbox root — and Tier-1 host-Chrome screenshots save to `~/.openclaw/media/browser/` (a sibling of the workspace, subdir hardcoded), which isn't in the managed-global whitelist (`{"outbound"}`+`tool-*`) and was only checked in the non-sandbox branch. So it dropped for *every* path form (native, absolute, or tilde). **Fix = 2 design-faithful edits** to `reply-media-paths.runtime-DegAVXTm.js` (`cf7231b259ef`→`6dfbfe762078`): add `"browser"` to the whitelist + consult it in the sandbox branch. Security preserved (those dirs aren't mounted in the sandbox → no arbitrary-file exfiltration; the `~`/`..` guard untouched). Backup `.orig-6c34` + idempotent `scripts/apply-6c34-screenshot-media-fix.sh` (survives reinstall). Brief corrected: `workspace-pa/MEMORY.md` (`d04bc6bcb77b`→`4e5409f74bf9`) — screenshots auto-deliver, don't hunt the host file or detour to the Tier-2 helper. **F26 PASS:** `pa`→sonnet, gateway restart (loads patch), Marie DM'd → Peter received 3 images incl. the **google + example.com Tier-1 `media/browser` shots (no MEDIA line → native delivery = patch proven)**; reverted `pa`→opus (A-7 byte-identical). Billed = one authorised Sonnet turn.
+- **★ Stage-2 flagship — per-action cost model.** `scripts/cost-breakdown.py` (`83d250a239f7`): every action decomposed into {input, output, cache-read, cache-write}, rolled up per task/agent/day. Headline: **cache ≈90% of spend; the naive input+output meter is ~10×–13× under** — the root of Marie's ~20×-off meter. Reconciliation to the P6-85 ±15% gate: manual `--console-total` works now; Admin-API auto-fetch wired for when Peter's key lands. Accuracy cross-checked. PROPOSE-only (read-only).
+- **★ Stage-2 — 08:00 CoS briefing v1.** `scripts/cos-briefing.py` (`7d98572cb1c3`) + staged `ai.openclaw.cos-briefing.plist.staged` (`47240c8ef4be`, plutil OK). Assembles ONE message host-side (£0): next-36h calendar (Google API) + per-agent `memory/<date>.md` digests + overdue todos. DRYRUN-verified (real events + Marie/Charlotte digests). Delivery = host-side `openclaw message send`; DRYRUN-default.
+- **Peter decisions (6c.34):** (1) cost reconciliation → **create an Admin API key**; (2) briefing → **build v1 on real sources**.
+
+## State (SHA-anchored)
+- **openclaw.json** `24715f4045bd`/10748B, 600/staff, live==last-good (A-7 clean). **Untouched this session** (the Sonnet flip round-tripped byte-perfect).
+- **Dist patch (persists):** `reply-media-paths.runtime-DegAVXTm.js` = `6dfbfe762078`/6847B (backup `.orig-6c34` = `cf7231b259ef`). Loaded (gateway restarted). Lost only on `openclaw` reinstall → re-run `apply-6c34-screenshot-media-fix.sh`.
+- **Agents:** `pa`=Marie/opus-4-7 (reverted), `pro`=Charlotte/sonnet-4-6, `cos`=Andreas/opus-4-7/paired/A2A-OFF. Gateway healthz 200.
+- **New/changed:** `workspace-pa/MEMORY.md` `4e5409f74bf9`; `scripts/{apply-6c34-screenshot-media-fix.sh, cost-breakdown.py, cos-briefing.py, ai.openclaw.cos-briefing.plist.staged}`.
+
+## Carried → 6c.35
+1. **Install the 08:00 briefing** (Peter): `launchctl bootstrap gui/502 ~/.openclaw/scripts/ai.openclaw.cos-briefing.plist` after copying it to `~/Library/LaunchAgents/` (GUI/D20). Optional £0 smoke test first: `python3 ~/.openclaw/scripts/cos-briefing.py --send --target 253509519`.
+2. **Admin API key** (Peter): create org-owner key → 0600 `agent-creds/anthropic-admin.key` → cost model auto-reconciles ([P6-148]/[P6-109]).
+3. **Digest-source reconciliation** — fleet digest location (`shared/daily-digests` vs `workspace-*/memory`) + de-dupe vs Marie's existing 8am digest ([P6-148]).
+4. **SR-1 doc-currency** ([P6-141]) — Andreas's first steward task (v7 PART 10 §SR-1 `openclaw-config`→`openclaw-docs`).
+5. **A2A live (Stage 3)** — code the resolved [P6-142] gates, dryrun `a2a-watch.plist`, then flip live.
+6. **[P6-116] MEMORY.md RATIONALE-rotation — NOW URGENT:** `workspace-pa/MEMORY.md` is over its 5909-char self-truncate cap (6395) → oldest tail rules silently lost.
+7. **Optional reversible (Peter):** Andreas avatar; `CHAT_RESET_TOKENS`→~70000; reply-watcher plist reload if pending.
+
+## Discipline
+Cost: one billed Sonnet turn (Marie F26, authorised); everything else £0 (host-side inspection/CLI, DRYRUN tests). No secrets read (structural `config get` + `shasum`; creds referenced by path only). Dist patch reversible + SHA-anchored + re-appliable. Irreversible/billed steps Peter-gated. openclaw.json untouched.
