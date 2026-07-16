@@ -5,10 +5,10 @@ _6c.37 shipped the bounded Marie reliability mitigation batch (Stage-1, structur
 ## Stage 0 — Ledger (no mutating work until GREEN)
 - **A-7:** live==last-good==**`24715f4045bd`/10748B**, 600/staff. Pin 2026.4.22 (`00bd2cf`). `cos`=Andreas/opus-4-7/**A2A-OFF**, `pa`=Marie/opus-4-7, `pro`=Charlotte/sonnet-4-6.
 - **★ Dist patch persists:** `reply-media-paths.runtime-DegAVXTm.js`==**`6dfbfe762078`**/6847B (the `BsZ-hV3v` 193B chunk is the known orphan — don't re-panic). Re-apply `apply-6c34-screenshot-media-fix.sh` + restart only if `DegAVXTm` itself reverts.
-- **Deviations currency:** P6-1..158 gap-free — re-run `scripts/carry-chain-audit.py` at open AND close.
+- **Deviations currency:** P6-1..159 gap-free — re-run `scripts/carry-chain-audit.py` at open AND close.
 - **Context/GUI ([P6-117]/D20):** confirm `SSH_CONNECTION` empty + `gui/502` before any restart/billed turn. Billed test = Sonnet, one short turn, re-confirm first ([[no-unauthorized-test-spend]]).
 - **★ A2A resting posture INERT.** `shared/a2a/HALT` PRESENT; plist staged-not-loaded; `a2a-watch.py`==**`96aa0247e52a`**; `sessions_send`/`sessions_spawn` OFF.
-- **6c.37 mitigations — check they took:** `scripts/memory-dedup.py`==**`4f5494c5c27d`**, `open-loops-watch.sh`==**`84715da28689`**, `chat-bloat-reset.sh`==**`3a7bd2f71c15`** (90K), `memory-health.py`==**`969c99ea31e8`** (autoheal). `open-loops.json`==`657c9cf769f5`. `AGENTS.md`==`2721b4a909ff`.
+- **6c.37 mitigations — check they took:** `scripts/memory-dedup.py`==**`4f5494c5c27d`**, `open-loops-watch.sh`==**`84715da28689`**, `chat-bloat-reset.sh`==**`e4a6bd9a4b40`** (90K + [P6-159] stuck-override), `memory-health.py`==**`969c99ea31e8`** (autoheal). `open-loops.json`==`657c9cf769f5`. `AGENTS.md`==`2721b4a909ff`. **open-loops watcher LIVE in dryrun** (Peter bootstrapped 6c.37) — flip to escalate after a shakedown once Marie populates loops. **[P6-155] reset + graceful notify PROVEN in production 14:49** (real compaction-spiral recovery).
 
 ## Stage 1 — Verify the 6c.37 mitigations bit in production (inspection-first, £0)
 Fast read-only confirmations before new build (each is a real-runtime check, not inspection-of-code):
