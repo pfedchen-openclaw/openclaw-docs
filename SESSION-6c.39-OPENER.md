@@ -1,0 +1,38 @@
+# SESSION 6c.39 — A2A: real-agent dryrun (F26, Peter-gated cost) → the Andreas track proper (Stage 3 durable Marie roots)
+
+_6c.38 shipped Stage 2 step 1: the A2A **agent-side emitter convention** is authored into all three briefs (hub full recipe in COS-PLAYBOOK §S11; spoke guardrail in each hot AGENTS.md; originate mechanics in the PLAYBOOKs) and **proven host-valid £0** (pure-function replay + a staged real-launchd dryrun script). The [P6-152] host gates now have a client. **£0, no billed turns, openclaw.json UNCHANGED (`24715f4045bd`/10748B, A-7 clean).** A2A still INERT. Deviations: P6-160. The convention is ready; what remains is the billed F26 real-agent test (Peter's cost OK) and then the live flip._
+
+## Stage 0 — Ledger (no mutating work until GREEN)
+- **A-7:** live==last-good==**`24715f4045bd`/10748B**, 600/staff. Pin 2026.4.22 (`00bd2cf`). `cos`=Andreas/opus-4-7/**A2A-OFF**, `pa`=Marie/opus-4-7, `pro`=Charlotte/sonnet-4-6.
+- **★ Dist patch persists:** `reply-media-paths.runtime-DegAVXTm.js`==**`6dfbfe762078`**/6847B (the `BsZ-hV3v` 193B chunk is the known orphan). Re-apply `apply-6c34-screenshot-media-fix.sh` + restart only if `DegAVXTm` itself reverts.
+- **Deviations currency:** P6-1..160 gap-free — re-run `scripts/carry-chain-audit.py` at open AND close.
+- **Context/GUI ([P6-117]/D20):** confirm `SSH_CONNECTION` empty + `gui/502` before any restart/billed turn. Billed test = agree the model/cost envelope FIRST ([[no-unauthorized-test-spend]]) — Andreas is opus-4-7, so a hub turn is NOT trivially cheap; propose the cheapest sufficient path and get Peter's OK.
+- **★ A2A resting posture INERT.** `shared/a2a/HALT` PRESENT; plist staged-not-loaded; `a2a-watch.py`==**`96aa0247e52a`**; `sessions_send`/`sessions_spawn` OFF; ledger 3 lines (`19bc6da01ac9`, dryrun-smoke only).
+- **6c.38 emitter convention — check it took:** `workspace-cos/COS-PLAYBOOK.md`==**`2642692106eb`**, `cos/TOOLS.md`==**`f81ea6883a67`**, `pa/AGENTS.md`==**`226681c1420f`**, `pa/PA-PLAYBOOK.md`==**`ad7f9ad05f83`**, `pro/AGENTS.md`==**`bafe6eaf93cb`**. Dryrun script `apply-6c38-a2a-convention-dryrun.sh`==**`dc0edebe71c5`**/5810B/755.
+- **6c.37 mitigations (still live):** `chat-bloat-reset.sh`==`e4a6bd9a4b40` (90K + [P6-159]), `memory-dedup.py`==`4f5494c5c27d`, `open-loops-watch.sh`==`84715da28689` (LIVE dryrun), `memory-health.py`==`969c99ea31e8`. `open-loops.json` register still `[]` unless Marie populated one.
+
+## Stage 1 — A2A: from authored-convention to a proven real-agent dryrun (the F26 gate — Peter-gated cost)
+The convention is host-valid; the untested claim is **behavioural** — does Andreas, given the new §S11 recipe, actually mint a `conversation_id`, write a well-formed envelope to `.a2a-outbox/pending/`, and read `results/` without re-sending? That needs a REAL turn (billed). Sequence (all Peter-gated, GUI/D20):
+1. **(Optional, £0) real-launchd confirmation:** `./scripts/apply-6c38-a2a-convention-dryrun.sh` — proves the watcher pipeline accepts the documented shape over launchd, self-restores INERT. Zero spend — do first if Peter wants the belt-and-braces.
+2. **F26 real-agent dryrun (BILLED — needs Peter's cost OK + model choice):** bootstrap the staged plist `A2A_MODE=dryrun`; remove HALT (posture change — surface it); drive ONE real hub→spoke ask (a scoped Andreas turn that legitimately needs Marie/Charlotte); verify `ledger.jsonl` shows the host-authoritative envelope over genuine agent output + a `would-dispatch` receipt in the spoke's outbox; then re-HALT + bootout. **Estimate the cost and get explicit authorisation before the turn** — Andreas is opus-4-7 (not a cheap Sonnet smoke); consider whether a cheaper path exists (e.g. a Sonnet-tier test identity) or accept one short Opus hub turn.
+3. **THEN live (Peter-gated, openclaw.json change + restart — SURFACE it):** flip `A2A_MODE=live` + remove `shared/a2a/HALT` + grant `sessions_send` (hard-gate `sessions_spawn`). Kill lever: `touch shared/a2a/HALT`. **Do NOT flip live** unless the real-agent dryrun is clean AND Peter authorises.
+
+## Stage 2 — the Andreas track proper (Stage 3 roots — the deep Marie cures live here)
+If A2A is parked pending Peter's cost decision, this is the higher-value lane. **The four Andreas-owned durable Marie roots ([P6-153]):**
+- **Aggressive frozen-core brief-slice** (§A.4 HEADLINE — kills bloat/latency/compaction-stick at source; the [P6-159] stuck-override + [P6-155] reset are backstops, not the cure). This is the single highest-leverage item.
+- **Engine-level live-chat keep-alive + bounded worker-session isolation** ([P6-149] live-chat drops).
+- **Production retrieval recall activation** ([P6-118]/[P6-137]) — also the enabler for [P6-157] micro-skills auto-recall.
+- **Hard pulse send-gate** ([P6-128]) + **per-task model routing** ([P6-28]/[P6-144]).
+Governing spec: `MASTER-ARCHITECTURE-v7.md` + `PRE-COS-BACKLOG.md §A.4`. These are architectural — scope one properly rather than half-building several.
+
+## Stage 3 / carried
+- **Mitigations still-settling (inspection):** open-loops watcher fires clean once Marie registers a loop → then flip to **escalate** ([P6-156]); a real flush post-restart leaves `dup×1` once the flush-prompt root is applied.
+- **Peter-gated applies pending:** delta-only flush prompt ([P6-154], apply at next restart); open-loops escalate flip.
+- **Lower-priority:** `@fedchenkov` deliverability (Andreas stewardship, DNS propose-only); in-place `draft-update` verb ([P6-158], optional); restaurant/place screenshot store (Travel-gated ~early Aug, [P6-147]); Andreas avatar (optional reversible); cost-model reconciliation awaiting Peter's Admin API key ([P6-148]); Charlotte `digest-<date>.md` handoff.
+
+## Safety rails
+Reversible reads/host-authoring/`git commit` run without prompting. **Surface irreversible/outward:** openclaw.json edits (F17 staged, Peter via `!`) + gateway restart (GUI/D20); **any billed turn (agree cost/model FIRST, re-confirm)**; **removing `shared/a2a/HALT`** (posture change) and **enabling A2A live**; real external sends; flipping the open-loops watcher to escalate. `openclaw.json` jq/mv/cp + raw `launchctl` + `op` mutations + `rm` + `docker exec` DENY-listed → Peter via `!` (6c.38: a compound with `rm -rf` was correctly refused — keep `rm` out of command blocks). **Secrets [F21/F51]:** never Read openclaw.json / `agent-creds/**` — structural `config get`/`jq`-on-keys + `shasum`/`docker inspect` only. Keep config checks on their own Bash line; no inline `#` in copy-paste blocks (A-10).
+
+## Carry-forward — status
+1. **✔ through 6c.37** (Marie mitigation batch Stage-1). **✔ 6c.38:** A2A agent-side emitter convention authored + host-valid (Stage 2 step 1) [P6-160]; 6c.37 mitigations verified in production.
+2. **→ THIS SESSION:** either (a) the A2A F26 real-agent dryrun → live flip (Peter's cost OK), or (b) if A2A is parked, open the **Andreas track proper** (Stage 3 durable Marie roots — the frozen-core brief-slice is the headline). Ask Peter which lane.
